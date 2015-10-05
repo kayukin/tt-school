@@ -68,7 +68,7 @@ public class Rectangle {
         x += dx;
     }
 
-    public double sqrt() {
+    public double Area() {
         return width * height;
     }
 
