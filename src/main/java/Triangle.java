@@ -79,4 +79,25 @@ public class Triangle {
     public boolean IsEquilateral() {
         return a.Distance(b) == a.Distance(c) && a.Distance(b) == b.Distance(c);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Triangle triangle = (Triangle) o;
+
+        if (!a.equals(triangle.a)) return false;
+        if (!b.equals(triangle.b)) return false;
+        return c.equals(triangle.c);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = a.hashCode();
+        result = 31 * result + b.hashCode();
+        result = 31 * result + c.hashCode();
+        return result;
+    }
 }
