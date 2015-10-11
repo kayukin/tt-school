@@ -1,3 +1,5 @@
+package net.thumbtack.lesson1;
+
 import java.awt.geom.Point2D;
 
 /**

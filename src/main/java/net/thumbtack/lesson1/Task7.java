@@ -1,4 +1,5 @@
-import java.awt.*;
+package net.thumbtack.lesson1;
+
 import java.awt.geom.Point2D;
 
 /**
@@ -6,7 +7,7 @@ import java.awt.geom.Point2D;
  */
 public class Task7 {
     public static void main(String[] args) {
-        Rectangle rect=new Rectangle(20,20);
+        net.thumbtack.lesson1.Rectangle rect=new net.thumbtack.lesson1.Rectangle(20,20);
         System.out.println(rect);
         boolean b = rect.IsPointIn(new Point2D.Double(10, 10));
 

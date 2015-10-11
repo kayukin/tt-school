@@ -1,3 +1,5 @@
+package net.thumbtack.lesson1;
+
 /**
  * Created by kayuk_000 on 05.10.2015.
  */
