@@ -101,6 +101,6 @@ public class DoubleLinkedList {
         return result.substring(0, result.length() - 1);
     }
 
-    
+
 
 }
