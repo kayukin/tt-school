@@ -55,6 +55,34 @@ public class DoubleLinkedList {
 
     //все кроме последнего
     public DoubleLinkedList body() {
-        return null;
+        if (head == null)
+            throw new OperationOnEmptyList("rest called on empty list");
+        DoubleLinkedList result = new DoubleLinkedList();
+        Node node = head;
+        while (node.next != null) {
+            result.Add(node.value);
+            node = node.next;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DoubleLinkedList that = (DoubleLinkedList) o;
+
+        for (Node thisNode = head, thatNode = that.head; thisNode != null && thatNode != null; thisNode = thisNode.next, thatNode = thatNode.next) {
+            if (!thisNode.equals(thatNode))
+                return false;
+        }
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return head != null ? head.hashCode() : 0;
     }
 }
