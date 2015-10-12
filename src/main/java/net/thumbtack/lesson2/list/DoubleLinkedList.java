@@ -1,5 +1,7 @@
 package net.thumbtack.lesson2.list;
 
+import java.util.Collection;
+
 /**
  * Created by kayuk_000 on 11.10.2015.
  */
@@ -10,6 +12,12 @@ public class DoubleLinkedList {
 
     public DoubleLinkedList() {
 
+    }
+
+    public DoubleLinkedList(int[] arr) {
+        for (int i : arr) {
+            Add(i);
+        }
     }
 
     public void Add(int e) {
@@ -40,7 +48,6 @@ public class DoubleLinkedList {
         return head == null;
     }
 
-    //Все кроме 1го
     public DoubleLinkedList rest() {
         if (head == null)
             throw new OperationOnEmptyList("rest called on empty list");
@@ -53,7 +60,6 @@ public class DoubleLinkedList {
         return result;
     }
 
-    //все кроме последнего
     public DoubleLinkedList body() {
         if (head == null)
             throw new OperationOnEmptyList("rest called on empty list");
@@ -85,4 +91,16 @@ public class DoubleLinkedList {
     public int hashCode() {
         return head != null ? head.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (Node node = head; node != null; node = node.next) {
+            result += node + " ";
+        }
+        return result.substring(0, result.length() - 1);
+    }
+
+    
+
 }
