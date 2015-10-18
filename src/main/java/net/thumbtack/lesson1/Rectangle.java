@@ -6,10 +6,10 @@ import java.awt.geom.Point2D;
  * Created by kayuk_000 on 04.10.2015.
  */
 public class Rectangle {
-    double x;
-    double y;
-    double height;
-    double width;
+    protected double x;
+    protected double y;
+    protected double height;
+    protected double width;
 
     public Rectangle(double x, double y, double width, double height) {
         this.x = x;
@@ -129,7 +129,7 @@ public class Rectangle {
         return IsPointIn(point.getX(), point.getY());
     }
 
-    public boolean IsRectIn(Rectangle rectangle) {//доделать
+    public boolean IsRectIn(Rectangle rectangle) {///////////////////
         return rectangle.x <= this.x &&
                 rectangle.y <= this.y &&
                 true;

@@ -6,12 +6,16 @@ import java.awt.geom.Point2D;
  * Created by kayuk_000 on 06.10.2015.
  */
 public class Circle {
-    Point center;
-    double radius;
+    protected Point center;
+    protected double radius;
 
     public Circle(Point center, double radius) {
         this.center = center;
         this.radius = radius;
+    }
+
+    public Circle() {
+        this(new Point(0, 0), 1);
     }
 
     public Point getCenter() {
