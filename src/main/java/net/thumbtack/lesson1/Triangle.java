@@ -1,11 +1,13 @@
 package net.thumbtack.lesson1;
 
+import net.thumbtack.lesson4.Square;
+
 import java.awt.geom.Point2D;
 
 /**
  * Created by kayuk_000 on 05.10.2015.
  */
-public class Triangle {
+public class Triangle implements Square {
     Point a;
     Point b;
     Point c;
@@ -58,14 +60,6 @@ public class Triangle {
         c.setY(c.getY() + dy);
     }
 
-    public double Area() {
-        double AB = a.Distance(b);
-        double BC = b.Distance(c);
-        double AC = a.Distance(c);
-        double p = (AB + BC + AC) / 2;
-        return Math.sqrt(p * (p - AB) * (p - BC) * (p - AC));
-    }
-
     public boolean IsPointIn(double x, double y) {
         Point point = new Point(x, y);
         double q = (a.getX() - point.getX()) * (b.getY() - a.getY()) - (b.getX() - a.getX()) * (a.getY() - point.getY());
@@ -101,5 +95,14 @@ public class Triangle {
         result = 31 * result + b.hashCode();
         result = 31 * result + c.hashCode();
         return result;
+    }
+
+    @Override
+    public double square() {
+        double AB = a.Distance(b);
+        double BC = b.Distance(c);
+        double AC = a.Distance(c);
+        double p = (AB + BC + AC) / 2;
+        return Math.sqrt(p * (p - AB) * (p - BC) * (p - AC));
     }
 }

@@ -1,11 +1,13 @@
 package net.thumbtack.lesson1;
 
+import net.thumbtack.lesson4.Square;
+
 import java.awt.geom.Point2D;
 
 /**
  * Created by kayuk_000 on 06.10.2015.
  */
-public class Circle {
+public class Circle implements Square {
     protected Point center;
     protected double radius;
 
@@ -66,10 +68,6 @@ public class Circle {
         center.setY(center.getY() + dy);
     }
 
-    public double Area() {
-        return Math.PI * radius * radius;
-    }
-
     public double Length() {
         return 2 * Math.PI * radius;
     }
@@ -80,5 +78,10 @@ public class Circle {
 
     public boolean IsPointIn(Point2D point) {
         return IsPointIn(point.getX(), point.getY());
+    }
+
+    @Override
+    public double square() {
+        return Math.PI * radius * radius;
     }
 }

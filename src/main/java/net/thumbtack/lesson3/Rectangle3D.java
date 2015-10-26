@@ -2,6 +2,7 @@ package net.thumbtack.lesson3;
 
 import javafx.geometry.Point3D;
 import net.thumbtack.lesson1.Rectangle;
+import net.thumbtack.lesson4.Square;
 
 /**
  * Created by kayukin on 18.10.15.
@@ -53,10 +54,6 @@ public class Rectangle3D extends Rectangle {
     public void Move(double dx, double dy, double dz) {
         super.Move(dx, dy);
         z += dz;
-    }
-
-    public double Area() {
-        return width * length;
     }
 
     public double Volume() {

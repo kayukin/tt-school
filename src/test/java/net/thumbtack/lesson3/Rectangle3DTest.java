@@ -49,8 +49,8 @@ public class Rectangle3DTest {
     }
 
     @Test
-    public void testArea() throws Exception {
-        assertEquals(1, new Rectangle3D().Area(), delta);
+    public void testSquare() throws Exception {
+        assertEquals(1, new Rectangle3D().square(), delta);
     }
 
     @Test

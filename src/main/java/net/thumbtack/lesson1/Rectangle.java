@@ -1,11 +1,13 @@
 package net.thumbtack.lesson1;
 
+import net.thumbtack.lesson4.Square;
+
 import java.awt.geom.Point2D;
 
 /**
  * Created by kayuk_000 on 04.10.2015.
  */
-public class Rectangle {
+public class Rectangle implements Square {
     protected double x;
     protected double y;
     protected double height;
@@ -70,10 +72,6 @@ public class Rectangle {
         x += dx;
     }
 
-    public double Area() {
-        return width * height;
-    }
-
     public Rectangle Large() {
         return new Rectangle(x, y, width * 5, height * 5);
     }
@@ -133,5 +131,10 @@ public class Rectangle {
         return rectangle.x <= this.x &&
                 rectangle.y <= this.y &&
                 true;
+    }
+
+    @Override
+    public double square() {
+        return width * height;
     }
 }
