@@ -7,7 +7,7 @@ import net.thumbtack.lesson4.Square;
 /**
  * Created by kayukin on 18.10.15.
  */
-public class Rectangle3D extends Rectangle {
+public class Rectangle3D extends Rectangle implements Square, Figure {
     double z;
     double length;
 

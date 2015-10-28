@@ -2,11 +2,12 @@ package net.thumbtack.lesson4;
 
 import net.thumbtack.lesson1.Circle;
 import net.thumbtack.lesson1.Rectangle;
+import net.thumbtack.lesson3.Figure;
 
 /**
  * Created by kayukin on 25.10.15.
  */
-public class PairBox<T extends Rectangle, K extends Circle> {
+public class PairBox<T extends Figure, K extends Figure> {
     T firstValue;
     K secondValue;
 

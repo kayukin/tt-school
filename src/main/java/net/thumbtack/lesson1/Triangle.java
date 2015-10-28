@@ -1,5 +1,6 @@
 package net.thumbtack.lesson1;
 
+import net.thumbtack.lesson3.Figure;
 import net.thumbtack.lesson4.Square;
 
 import java.awt.geom.Point2D;
@@ -7,7 +8,7 @@ import java.awt.geom.Point2D;
 /**
  * Created by kayuk_000 on 05.10.2015.
  */
-public class Triangle implements Square {
+public class Triangle implements Square, Figure {
     Point a;
     Point b;
     Point c;
