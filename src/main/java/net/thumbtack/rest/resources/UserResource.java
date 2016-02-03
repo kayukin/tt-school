@@ -3,6 +3,7 @@ package net.thumbtack.rest.resources;
 import com.google.gson.Gson;
 import net.thumbtack.rest.models.User;
 import net.thumbtack.rest.persistence.InMemoryUserDao;
+import net.thumbtack.rest.persistence.JdbcUserDao;
 import net.thumbtack.rest.persistence.UserDao;
 
 
@@ -14,7 +15,7 @@ public class UserResource {
     //thread-safe thing
     private static final Gson gson = new Gson();
 
-    private static volatile UserDao dao = InMemoryUserDao.getInstance();
+    private static volatile UserDao dao = new JdbcUserDao();//InMemoryUserDao.getInstance();
 
 
     @POST
@@ -36,6 +37,7 @@ public class UserResource {
             return Response.notModified().build();
         }
         User newUser = gson.fromJson(body, User.class);
+        newUser.setId(id);
         dao.modify(newUser);
         return Response.ok().build();
     }
@@ -46,7 +48,7 @@ public class UserResource {
     public Response get(@PathParam("id") int id) {
         User user = dao.findById(id);
         if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         } else {
             return Response.ok(gson.toJson(user)).build();
         }
@@ -62,14 +64,14 @@ public class UserResource {
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {
         dao.delete(id);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("/deleteall")
     public Response deleteAll() {
         dao.deleteAll();
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     /**
