@@ -1,25 +1,21 @@
 <configuration>
 
-    <logger name="org.eclipse.jetty" level="INFO" />
-    <logger name="org.apache.ibatis" level="INFO" />
-
-
+    <!-- <logger name="net.thumbtack.logging" level="INFO" /> -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
         <encoder>
             <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n
             </Pattern>
         </encoder>
-
     </appender>
 
-    <appender name="mybatislessonlog"
+    <appender name="log"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>backend.log</File>
+        <File>package1.log</File>
         <Append>true</Append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5level %class{36}:%L %M -
-                %msg%n</Pattern>
+            <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5level %class{36}:%L %M
+                -%msg%n
+            </Pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>test.%i.log.gz</fileNamePattern>
@@ -32,9 +28,9 @@
         </triggeringPolicy>
     </appender>
 
-    <root level="debug">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="mybatislessonlog" />
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="log"/>
     </root>
 
 </configuration>
