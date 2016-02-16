@@ -7,7 +7,12 @@ public class Skill extends Entity{
     private String name;
     private int level;
 
-    public Skill() {
+    private Skill() {
+    }
+
+    public Skill(int level, String name) {
+        this.level = level;
+        this.name = name;
     }
 
     public Skill(int id, String name, int level) {
@@ -30,27 +35,6 @@ public class Skill extends Entity{
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Skill skill = (Skill) o;
-
-        if (level != skill.level) return false;
-        return name != null ? name.equals(skill.name) : skill.name == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + level;
-        return result;
     }
 
     @Override

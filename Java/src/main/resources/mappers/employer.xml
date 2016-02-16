@@ -1,0 +1,38 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.internship.app.persistence.mybatis.mapper.BookMapper">
+    <resultMap type="net.thumbtack.internship.app.domain.Book" id="bookMap">
+        <id column="book_id" property="id"/>
+        <result column="book_name" property="title"/>
+        <collection property="authors" resultMap="authorMap"/>
+    </resultMap>
+
+    <resultMap type="net.thumbtack.internship.app.domain.Author" id="authorMap">
+        <id column="author_id" property="id"/>
+        <result column="author_name" property="name"/>
+    </resultMap>
+
+    <select id="findById" resultMap="bookMap">
+        SELECT * FROM books
+        LEFT JOIN books_authors
+        ON books.book_id = books_authors.book_id
+        LEFT JOIN authors
+        ON books_authors.author_id = authors.author_id
+        WHERE books.book_id = #{id}
+    </select>
+
+    <select id="findByName" resultMap="bookMap">
+        SELECT * FROM books
+        LEFT JOIN books_authors
+        ON books.book_id = books_authors.book_id
+        LEFT JOIN authors
+        ON books_authors.author_id = authors.author_id
+        WHERE books.book_name = #{name}
+    </select>
+
+
+
+
+</mapper>

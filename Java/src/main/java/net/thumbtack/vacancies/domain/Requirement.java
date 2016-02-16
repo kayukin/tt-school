@@ -6,7 +6,8 @@ package net.thumbtack.vacancies.domain;
 public class Requirement extends Skill {
     private boolean isNecessary;
 
-    public Requirement() {
+    private Requirement() {
+        super(0, null);
     }
 
     public Requirement(int id, String name, int level, boolean isNecessary) {
@@ -20,25 +21,6 @@ public class Requirement extends Skill {
 
     public void setNecessary(boolean necessary) {
         isNecessary = necessary;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Requirement that = (Requirement) o;
-
-        return isNecessary == that.isNecessary;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (isNecessary ? 1 : 0);
-        return result;
     }
 
     @Override

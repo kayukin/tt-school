@@ -4,6 +4,7 @@ import net.thumbtack.vacancies.domain.Employer;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,8 +30,8 @@ public class EmployerDaoInMemoryImpl implements EmployerDao {
     }
 
     @Override
-    public Employer getById(int id) {
-        return database.get(id);
+    public Optional<Employer> getById(int id) {
+        return Optional.ofNullable(database.get(id));
     }
 
     @Override

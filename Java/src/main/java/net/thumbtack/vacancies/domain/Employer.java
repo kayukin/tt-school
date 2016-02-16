@@ -1,25 +1,34 @@
 package net.thumbtack.vacancies.domain;
 
+import java.util.List;
+
 /**
  * Created by Konstantin on 15.02.2016.
  */
 public class Employer extends User {
     private String company;
     private String address;
+    List<Offer> offers;
 
-    public Employer() {
+    private Employer() {
+        super(null, null, null, null, null);
     }
 
-    public Employer(String email, String firstName, String lastName, String login, String password, String company, String address) {
+    public Employer(String email, String firstName, String lastName, String login,
+                    String password, String company, String address, List<Offer> offers) {
         super(email, firstName, lastName, login, password);
         this.company = company;
         this.address = address;
+        this.offers = offers;
     }
 
-    public Employer(int id, String email, String firstName, String lastName, String login, String password, String company, String address) {
+    public Employer(int id, String email, String firstName, String lastName, String login,
+
+                    String password, String company, String address, List<Offer> offers) {
         super(id, email, firstName, lastName, login, password);
         this.company = company;
         this.address = address;
+        this.offers = offers;
     }
 
     public String getCompany() {
@@ -38,27 +47,14 @@ public class Employer extends User {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Employer employer = (Employer) o;
-
-        if (company != null ? !company.equals(employer.company) : employer.company != null) return false;
-        return address != null ? address.equals(employer.address) : employer.address == null;
-
+    public List<Offer> getOffers() {
+        return offers;
     }
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        return result;
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
     }
-
+    
     @Override
     public String toString() {
         return "Employer{" +
