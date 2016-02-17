@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Konstantin on 16.02.2016.
  */
 public interface EmployerMapper {
-    int create(Employer employer);
+    void create(Employer employer);
 
     Employer getById(int id);
 

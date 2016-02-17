@@ -1,0 +1,38 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.CandidateMapper">
+    <resultMap type="net.thumbtack.vacancies.domain.Candidate" id="candidateMap">
+        <id column="id" property="id"/>
+        <result column="firstname" property="firstName"/>
+        <result column="lastname" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="login" property="login"/>
+        <collection property="skills" resultMap="skillMap"/>
+    </resultMap>
+
+    <resultMap id="skillMap" type="net.thumbtack.vacancies.domain.Skill">
+        <id column="id" property="id"/>
+        <result column="level" property="level"/>
+        <association property="name" javaType="String">
+            <result column="skill_list.name" property="name"/>
+        </association>
+    </resultMap>
+
+    <select id="getById" resultMap="candidateMap">
+        SELECT * FROM candidates
+        LEFT JOIN skills
+        ON candidates.id = skills.id_candidate
+        LEFT JOIN skill_list
+        ON skills.id_skill = skill_list.id
+        WHERE candidates.id=#{id}
+    </select>
+    <!--
+        <insert id="create" parameterType="net.thumbtack.vacancies.domain.Candidate" useGeneratedKeys="true"
+                keyProperty="id">
+            INSERT INTO employers (company, address, firstname, lastname, email, login, password)
+            VALUES (#{company}, #{address},#{firstName}, #{lastName}, #{email},#{login}, #{password})
+        </insert>
+    -->
+</mapper>
