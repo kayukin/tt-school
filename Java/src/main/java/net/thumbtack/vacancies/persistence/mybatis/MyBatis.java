@@ -11,7 +11,7 @@ import java.io.InputStream;
  * Created by Konstantin on 17.02.2016.
  */
 public class MyBatis {
-    private static SqlSessionFactory INSTANCE;
+    private static volatile SqlSessionFactory INSTANCE;
     private static final String resource = "mybatis.xml";
 
     private MyBatis() {
