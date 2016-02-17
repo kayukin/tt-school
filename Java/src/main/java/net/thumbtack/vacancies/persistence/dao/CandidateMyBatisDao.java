@@ -5,13 +5,14 @@ import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.CandidateMapper;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Created by Konstantin on 17.02.2016.
  */
-public class CandidateDaoMyBatisImpl implements CandidateDao {
+public class CandidateMyBatisDao implements CandidateDao {
     @Override
     public int create(Candidate candidate) {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
@@ -32,6 +33,6 @@ public class CandidateDaoMyBatisImpl implements CandidateDao {
 
     @Override
     public List<Candidate> getAll() {
-        return null;
+        return new ArrayList<>();
     }
 }

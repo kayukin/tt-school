@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by Konstantin on 15.02.2016.
  */
-public class EmployerDaoInMemoryImpl implements EmployerDao {
-    private final static EmployerDao INSTANCE = new EmployerDaoInMemoryImpl();
+public class EmployerInMemoryDao implements EmployerDao {
+    private final static EmployerDao INSTANCE = new EmployerInMemoryDao();
 
     public static EmployerDao getInstance() {
         return INSTANCE;

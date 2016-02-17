@@ -3,7 +3,6 @@ package net.thumbtack.vacancies.rest;
 import com.google.gson.Gson;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
-import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.persistence.dao.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import java.util.Optional;
 public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
-    private static volatile CandidateDao Dao = new CandidateDaoMyBatisImpl();
+    private static volatile CandidateDao Dao = new CandidateMyBatisDao();
 
     @POST
     @Produces("application/json")

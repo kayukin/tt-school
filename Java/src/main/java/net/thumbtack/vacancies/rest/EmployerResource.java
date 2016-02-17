@@ -5,8 +5,7 @@ import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.persistence.dao.DuplicateEmployer;
 import net.thumbtack.vacancies.persistence.dao.EmployerDao;
-import net.thumbtack.vacancies.persistence.dao.EmployerDaoInMemoryImpl;
-import net.thumbtack.vacancies.persistence.dao.EmployerDaoMyBatisImpl;
+import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ import java.util.Optional;
 public class EmployerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerResource.class);
     private static final Gson gson = new Gson();
-    private static volatile EmployerDao Dao = new EmployerDaoMyBatisImpl();//EmployerDaoInMemoryImpl.getInstance();
+    private static volatile EmployerDao Dao = new EmployerMyBatisDao();//EmployerInMemoryDao.getInstance();
 
     @POST
     @Produces("application/json")

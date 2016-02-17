@@ -8,14 +8,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Created by Konstantin on 16.02.2016.
  */
-public class EmployerDaoMyBatisImpl implements EmployerDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmployerDaoMyBatisImpl.class);
+public class EmployerMyBatisDao implements EmployerDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployerMyBatisDao.class);
 
     @Override
     public int create(Employer employer) throws DuplicateEmployer {
@@ -39,6 +40,6 @@ public class EmployerDaoMyBatisImpl implements EmployerDao {
 
     @Override
     public List<Employer> getAll() {
-        return null;
+        return new ArrayList<>();
     }
 }
