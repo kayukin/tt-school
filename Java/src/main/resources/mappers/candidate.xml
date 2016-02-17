@@ -13,11 +13,9 @@
     </resultMap>
 
     <resultMap id="skillMap" type="net.thumbtack.vacancies.domain.Skill">
-        <id column="id" property="id"/>
+        <id column="id_skill" property="id"/>
         <result column="level" property="level"/>
-        <association property="name" javaType="String">
-            <result column="skill_list.name" property="name"/>
-        </association>
+        <result column="name" property="name"/>
     </resultMap>
 
     <select id="getById" resultMap="candidateMap">
