@@ -17,6 +17,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="mappers/book.xml"/>
+        <mapper resource="mappers/employer.xml"/>
     </mappers>
 </configuration>

@@ -2,37 +2,67 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="net.thumbtack.internship.app.persistence.mybatis.mapper.BookMapper">
-    <resultMap type="net.thumbtack.internship.app.domain.Book" id="bookMap">
-        <id column="book_id" property="id"/>
-        <result column="book_name" property="title"/>
-        <collection property="authors" resultMap="authorMap"/>
+<mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper">
+    <resultMap type="net.thumbtack.vacancies.domain.Employer" id="employerMap">
+        <id column="id" property="id"/>
+        <result column="company" property="company"/>
+        <result column="address" property="address"/>
+        <result column="firstname" property="firstName"/>
+        <result column="lastname" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="login" property="login"/>
+        <collection property="offers" resultMap="offerMap"/>
     </resultMap>
 
-    <resultMap type="net.thumbtack.internship.app.domain.Author" id="authorMap">
-        <id column="author_id" property="id"/>
-        <result column="author_name" property="name"/>
+    <resultMap id="offerMap" type="net.thumbtack.vacancies.domain.Offer">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="salary" property="salary"/>
+        <collection property="requirements" resultMap="requirementMap"/>
     </resultMap>
 
-    <select id="findById" resultMap="bookMap">
-        SELECT * FROM books
-        LEFT JOIN books_authors
-        ON books.book_id = books_authors.book_id
-        LEFT JOIN authors
-        ON books_authors.author_id = authors.author_id
-        WHERE books.book_id = #{id}
+
+    <resultMap id="requirementMap" type="net.thumbtack.vacancies.domain.Requirement">
+        <id column="id" property="id"/>
+        <result column="level" property="level"/>
+        <result column="isnecessary" property="isNecessary"/>
+        <association property="name" javaType="String">
+            <result column="skill_list.name" property="name"/>
+        </association>
+    </resultMap>
+
+    <!--
+        <resultMap type="net.thumbtack.internship.app.domain.Author" id="employerMap">
+            <id column="author_id" property="id"/>
+            <result column="author_name" property="name"/>
+        </resultMap>
+    -->
+
+    <select id="getById" resultMap="employerMap">
+        SELECT * FROM employers
+        LEFT JOIN offers
+        ON employers.id = offers.id_employer
+        LEFT JOIN requirements
+        ON offers.id = requirements.id_offer
+        LEFT JOIN skill_list
+        ON requirements.skill_id = skill_list.id
+        WHERE employers.id = #{id}
     </select>
 
-    <select id="findByName" resultMap="bookMap">
-        SELECT * FROM books
-        LEFT JOIN books_authors
-        ON books.book_id = books_authors.book_id
-        LEFT JOIN authors
-        ON books_authors.author_id = authors.author_id
-        WHERE books.book_name = #{name}
-    </select>
-
-
-
+    <insert id="create" parameterType="net.thumbtack.vacancies.domain.Employer" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO employers (company, address, firstname, lastname, email, login, password)
+        VALUES (#{company}, #{address},#{firstName}, #{lastName}, #{email},#{login}, #{password})
+    </insert>
+    <!--
+        <select id="findByName" resultMap="bookMap">
+            SELECT * FROM books
+            LEFT JOIN books_authors
+            ON books.book_id = books_authors.book_id
+            LEFT JOIN authors
+            ON books_authors.author_id = authors.author_id
+            WHERE books.book_name = #{name}
+        </select>
+    -->
 
 </mapper>

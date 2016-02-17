@@ -1,6 +1,5 @@
 <configuration>
 
-    <!-- <logger name="net.thumbtack.logging" level="INFO" /> -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n
@@ -28,9 +27,13 @@
         </triggeringPolicy>
     </appender>
 
-    <root level="INFO">
+    <logger name="net.thumbtack.vacancies" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="log"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>

@@ -2,16 +2,16 @@ package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Employer;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Created by Konstantin on 15.02.2016.
  */
 public interface EmployerDao {
-    int Create(Employer employer);
+    int create(Employer employer) throws DuplicateEmployer;
 
     Optional<Employer> getById(int id);
 
-    Collection<Employer> getAll();
+    List<Employer> getAll();
 }

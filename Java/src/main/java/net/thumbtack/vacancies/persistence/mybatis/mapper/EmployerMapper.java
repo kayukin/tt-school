@@ -1,12 +1,16 @@
-package net.thumbtack.vacancies.persistence.mapper;
+package net.thumbtack.vacancies.persistence.mybatis.mapper;
 
 import net.thumbtack.vacancies.domain.Employer;
+
+import java.util.List;
 
 /**
  * Created by Konstantin on 16.02.2016.
  */
 public interface EmployerMapper {
-    int Create(Employer employer);
+    int create(Employer employer);
 
     Employer getById(int id);
+
+    List<Employer> getAll();
 }

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Offer extends Entity {
     private String name;
-    private int Salary;
+    private int salary;
     private List<Requirement> requirements;
 
     private Offer() {
@@ -15,14 +15,14 @@ public class Offer extends Entity {
 
     public Offer(String name, int salary, List<Requirement> requirements) {
         this.name = name;
-        Salary = salary;
+        this.salary = salary;
         this.requirements = requirements;
     }
 
     public Offer(int id, String name, int salary, List<Requirement> requirements) {
         super(id);
         this.name = name;
-        Salary = salary;
+        this.salary = salary;
         this.requirements = requirements;
     }
 
@@ -35,11 +35,11 @@ public class Offer extends Entity {
     }
 
     public int getSalary() {
-        return Salary;
+        return salary;
     }
 
     public void setSalary(int salary) {
-        Salary = salary;
+        this.salary = salary;
     }
 
     public List<Requirement> getRequirements() {
@@ -54,7 +54,7 @@ public class Offer extends Entity {
     public String toString() {
         return "Offer{" +
                 "name='" + name + '\'' +
-                ", Salary=" + Salary +
+                ", salary=" + salary +
                 ", requirements=" + requirements +
                 '}';
     }

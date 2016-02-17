@@ -1,10 +1,11 @@
 package net.thumbtack.vacancies.config;
 
-import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.util.Properties;
 
 /**
@@ -17,7 +18,8 @@ public class ConfigService {
     private static final ConfigService INSTANCE = new ConfigService();
 
     private ConfigService() {
-        try (InputStream inputStream = Resources.getResourceAsStream(filename)) {
+
+        try (InputStream inputStream = ConfigService.class.getClassLoader().getResourceAsStream(filename)) {
             properties.load(inputStream);
         } catch (IOException e) {
             LOGGER.error("Can't load property file: ", e);
@@ -47,5 +49,13 @@ public class ConfigService {
 
     public int getEmployeeExpirationDays() {
         return Integer.parseInt(properties.getProperty("employee_expiration"));
+    }
+
+    public int getPort() {
+        return Integer.parseInt(properties.getProperty("port"));
+    }
+
+    public String getURI() {
+        return properties.getProperty("URI");
     }
 }

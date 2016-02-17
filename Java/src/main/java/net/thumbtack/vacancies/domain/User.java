@@ -8,6 +8,7 @@ public class User extends Entity {
     private String firstName;
     private String lastName;
     private String login;
+    private String password;
 
     private User() {
     }
@@ -17,6 +18,7 @@ public class User extends Entity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
+        this.password = password;
     }
 
     public User(int id, String email, String firstName, String lastName, String login, String password) {
@@ -25,6 +27,7 @@ public class User extends Entity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
+        this.password = password;
     }
 
     public String getEmail() {
@@ -57,6 +60,14 @@ public class User extends Entity {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

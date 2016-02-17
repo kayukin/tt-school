@@ -2,7 +2,8 @@ package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Employer;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,10 +20,16 @@ public class EmployerDaoInMemoryImpl implements EmployerDao {
     }
 
     private static final Map<Integer, Employer> database = new ConcurrentHashMap<>();
+
+    static {
+        database.put(1, new Employer(1, "job@thumbtack.net", "Ivan", "Ivanov"
+                , "login", "pass", "thumbtack", "Jukova", null));
+    }
+
     private static final AtomicInteger nextId = new AtomicInteger(0);
 
     @Override
-    public int Create(Employer employer) {
+    public int create(Employer employer) {
         int id = nextId.incrementAndGet();
         employer.setId(id);
         database.put(id, employer);
@@ -35,8 +42,8 @@ public class EmployerDaoInMemoryImpl implements EmployerDao {
     }
 
     @Override
-    public Collection<Employer> getAll() {
-        return database.values();
+    public List<Employer> getAll() {
+        return new ArrayList<>(database.values());
     }
 
 

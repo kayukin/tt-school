@@ -54,6 +54,8 @@ public class Employer extends User {
     public void setOffers(List<Offer> offers) {
         this.offers = offers;
     }
+
+
     
     @Override
     public String toString() {
