@@ -21,7 +21,7 @@ import java.util.Optional;
 public class EmployerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerResource.class);
     private static final Gson gson = new Gson();
-    private static volatile EmployerDao Dao = new EmployerMyBatisDao();//EmployerInMemoryDao.getInstance();
+    private static volatile EmployerDao Dao = EmployerMyBatisDao.getInstance();
 
     @POST
     @Produces("application/json")

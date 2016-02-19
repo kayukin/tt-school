@@ -4,7 +4,7 @@
 
 <mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper">
     <resultMap type="net.thumbtack.vacancies.domain.Employer" id="employerMap">
-        <id column="id" property="id"/>
+        <id column="employer_id" property="id"/>
         <result column="company" property="company"/>
         <result column="address" property="address"/>
         <result column="firstname" property="firstName"/>
@@ -15,54 +15,57 @@
     </resultMap>
 
     <resultMap id="offerMap" type="net.thumbtack.vacancies.domain.Offer">
-        <id column="id" property="id"/>
-        <result column="name" property="name"/>
+        <id column="offer_id" property="id"/>
+        <result column="offer_name" property="name"/>
         <result column="salary" property="salary"/>
         <collection property="requirements" resultMap="requirementMap"/>
     </resultMap>
 
 
     <resultMap id="requirementMap" type="net.thumbtack.vacancies.domain.Requirement">
-        <id column="id" property="id"/>
+        <id column="requirement_id" property="id"/>
         <result column="level" property="level"/>
         <result column="isnecessary" property="isNecessary"/>
-        <association property="name" javaType="String">
-            <result column="skill_list.name" property="name"/>
-        </association>
+        <result column="skill_name" property="name"/>
     </resultMap>
 
-    <!--
-        <resultMap type="net.thumbtack.internship.app.domain.Author" id="employerMap">
-            <id column="author_id" property="id"/>
-            <result column="author_name" property="name"/>
-        </resultMap>
-    -->
+    <sql id="selectEmployer">
+SELECT
+E.`id` AS employer_id,
+e.`address`,
+e.`company`,
+e.`email`,
+e.`firstname`,
+e.`lastname`,
+e.`login`,
+O.`id` AS offer_id,
+O.`name` AS offer_name,
+O.`salary`,
+R.`id` AS requirement_id,
+R.`isnecessary`,
+R.`level`,
+SL.`name` AS skill_name
+FROM employers AS E
+LEFT JOIN offers O ON E.`id`=O.`id_employer`
+LEFT JOIN requirements R ON O.`id`=R.`id_offer`
+LEFT JOIN skill_list SL ON R.`skill_id`=SL.`id`
+</sql>
 
     <select id="getById" resultMap="employerMap">
-        SELECT * FROM employers
-        LEFT JOIN offers
-        ON employers.id = offers.id_employer
-        LEFT JOIN requirements
-        ON offers.id = requirements.id_offer
-        LEFT JOIN skill_list
-        ON requirements.skill_id = skill_list.id
+        <include refid="selectEmployer"/>
         WHERE employers.id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="employerMap">
+        <include refid="selectEmployer"/>
     </select>
 
     <insert id="create" parameterType="net.thumbtack.vacancies.domain.Employer" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO employers (company, address, firstname, lastname, email, login, password)
         VALUES (#{company}, #{address},#{firstName}, #{lastName}, #{email},#{login}, #{password})
+
     </insert>
-    <!--
-        <select id="findByName" resultMap="bookMap">
-            SELECT * FROM books
-            LEFT JOIN books_authors
-            ON books.book_id = books_authors.book_id
-            LEFT JOIN authors
-            ON books_authors.author_id = authors.author_id
-            WHERE books.book_name = #{name}
-        </select>
-    -->
+
 
 </mapper>

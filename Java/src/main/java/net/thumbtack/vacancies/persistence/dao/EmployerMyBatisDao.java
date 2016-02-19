@@ -17,6 +17,15 @@ import java.util.Optional;
  */
 public class EmployerMyBatisDao implements EmployerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerMyBatisDao.class);
+    private static final EmployerMyBatisDao INSTANCE = new EmployerMyBatisDao();
+
+    private EmployerMyBatisDao() {
+
+    }
+
+    public static EmployerMyBatisDao getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public int create(Employer employer) throws DuplicateEmployer {
@@ -40,6 +49,9 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public List<Employer> getAll() {
-        return new ArrayList<>();
+        try (SqlSession session = MyBatis.getInstance().openSession()) {
+            EmployerMapper mapper = session.getMapper(EmployerMapper.class);
+            return mapper.getAll();
+        }
     }
 }

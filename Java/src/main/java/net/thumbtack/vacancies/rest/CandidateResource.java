@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
-    private static volatile CandidateDao Dao = new CandidateMyBatisDao();
+    private static volatile CandidateDao Dao = CandidateMyBatisDao.getInstance();
 
     @POST
     @Produces("application/json")
