@@ -1,6 +1,7 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.persistence.dao.*;
@@ -38,9 +39,9 @@ public class CandidateResource {
         if (candidate.isPresent()) {
             return Response.ok(gson.toJson(candidate.get())).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(gson.toJson(MessageSource.getInstance().getMessage("employernotfound")))
-                    .build();
+            JsonObject json = new JsonObject();
+            json.addProperty("error", MessageSource.getInstance().getMessage("employernotfound"));
+            return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
         }
     }
 
