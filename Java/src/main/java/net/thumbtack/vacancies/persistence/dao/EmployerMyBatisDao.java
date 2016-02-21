@@ -35,16 +35,10 @@ public class EmployerMyBatisDao implements EmployerDao {
             session.commit();
             return employer.getId();
         } catch (PersistenceException e) {
-            Throwable t = e;
-            while (t.getCause() != null) {
-                t = t.getCause();
-                if (t instanceof SQLIntegrityConstraintViolationException) {
-                    if (t.getMessage().contains("login_UNIQUE")) {
-                        throw new DuplicateLogin(e);
-                    } else if (t.getMessage().contains("company_UNIQUE")) {
-                        throw new DuplicateCompany(e);
-                    }
-                }
+            if (e.getMessage().contains("login_UNIQUE")) {
+                throw new DuplicateLogin(e);
+            } else if (e.getMessage().contains("company_UNIQUE")) {
+                throw new DuplicateCompany(e);
             }
             throw new RuntimeException(e);
         }

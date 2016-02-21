@@ -35,14 +35,8 @@ public class CandidateMyBatisDao implements CandidateDao {
             session.commit();
             return candidate.getId();
         } catch (PersistenceException e) {
-            Throwable t = e;
-            while (t.getCause() != null) {
-                t = t.getCause();
-                if (t instanceof SQLIntegrityConstraintViolationException) {
-                    if (t.getMessage().contains("login_UNIQUE")) {
-                        throw new DuplicateLogin(e);
-                    }
-                }
+            if (e.getMessage().contains("login_UNIQUE")) {
+                throw new DuplicateLogin(e);
             }
             throw new RuntimeException(e);
         }
