@@ -9,7 +9,7 @@ import java.util.Optional;
  * Created by Konstantin on 17.02.2016.
  */
 public interface CandidateDao {
-    int create(Candidate candidate);
+    int create(Candidate candidate) throws DuplicateLogin;
 
     Optional<Candidate> getById(int id);
 

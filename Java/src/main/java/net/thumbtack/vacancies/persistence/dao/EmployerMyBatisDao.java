@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +28,25 @@ public class EmployerMyBatisDao implements EmployerDao {
     }
 
     @Override
-    public int create(Employer employer) throws DuplicateEmployer {
+    public int create(Employer employer) throws DuplicateCompany, DuplicateLogin {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
             EmployerMapper mapper = session.getMapper(EmployerMapper.class);
             mapper.create(employer);
             session.commit();
             return employer.getId();
         } catch (PersistenceException e) {
-            throw new DuplicateEmployer(e);
+            Throwable t = e;
+            while (t.getCause() != null) {
+                t = t.getCause();
+                if (t instanceof SQLIntegrityConstraintViolationException) {
+                    if (t.getMessage().contains("login_UNIQUE")) {
+                        throw new DuplicateLogin(e);
+                    } else if (t.getMessage().contains("company_UNIQUE")) {
+                        throw new DuplicateCompany(e);
+                    }
+                }
+            }
+            throw new RuntimeException(e);
         }
     }
 

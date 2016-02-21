@@ -20,15 +20,22 @@ public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
     private static volatile CandidateDao Dao = CandidateMyBatisDao.getInstance();
+    private static MessageSource messageSource = MessageSource.getInstance();
 
     @POST
     @Produces("application/json")
     public Response create(String body) {
         Candidate candidate = gson.fromJson(body, Candidate.class);
-        int id = Dao.create(candidate);
-        candidate.setId(id);
-        LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
-        return Response.status(Response.Status.CREATED).entity(gson.toJson(candidate)).build();
+        try {
+            int id = Dao.create(candidate);
+            candidate.setId(id);
+            LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
+            return Response.status(Response.Status.CREATED).entity(gson.toJson(candidate)).build();
+        } catch (DuplicateLogin e) {
+            LOGGER.info("Attempt to create a duplicate user: {}.", candidate.getLogin());
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(messageSource.getJsonErrorMessage("duplicateuser")).build();
+        }
     }
 
     @GET
@@ -39,9 +46,8 @@ public class CandidateResource {
         if (candidate.isPresent()) {
             return Response.ok(gson.toJson(candidate.get())).build();
         } else {
-            JsonObject json = new JsonObject();
-            json.addProperty("error", MessageSource.getInstance().getMessage("employernotfound"));
-            return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
     }
 

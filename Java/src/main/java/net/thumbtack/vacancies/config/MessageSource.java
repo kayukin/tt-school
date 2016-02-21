@@ -1,5 +1,6 @@
 package net.thumbtack.vacancies.config;
 
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,5 +34,11 @@ public class MessageSource {
 
     public String getMessage(String propertyName) {
         return properties.getProperty(propertyName);
+    }
+
+    public String getJsonErrorMessage(String propertyName) {
+        JsonObject json = new JsonObject();
+        json.addProperty("error", getMessage(propertyName));
+        return json.toString();
     }
 }
