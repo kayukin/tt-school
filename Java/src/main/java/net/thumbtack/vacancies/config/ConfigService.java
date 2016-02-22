@@ -58,4 +58,8 @@ public class ConfigService {
     public String getURI() {
         return properties.getProperty("URI");
     }
+
+    public long getSessionTime() {
+        return Long.parseLong(properties.getProperty("sessionexpirationtime"));
+    }
 }

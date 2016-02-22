@@ -1,17 +1,22 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.persistence.dao.DuplicateCompany;
 import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.persistence.dao.EmployerDao;
 import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
+import net.thumbtack.vacancies.rest.filter.Role;
+import net.thumbtack.vacancies.rest.filter.Secured;
+import net.thumbtack.vacancies.rest.session.Session;
+import net.thumbtack.vacancies.rest.session.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -20,6 +25,7 @@ import java.util.Optional;
  */
 
 @Path("api/employer")
+@Secured({Role.EMPLOYER})
 public class EmployerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerResource.class);
     private static final Gson gson = new Gson();
@@ -32,7 +38,6 @@ public class EmployerResource {
         Employer employer = gson.fromJson(body, Employer.class);
         try {
             int id = Dao.create(employer);
-            employer.setId(id);
             LOGGER.info("User: {} was created with id: {}.", employer.getLogin(), id);
             return Response.status(Response.Status.CREATED).entity(gson.toJson(employer)).build();
         } catch (DuplicateLogin e) {
@@ -49,14 +54,16 @@ public class EmployerResource {
     @GET
     @Produces("application/json")
     @Path("/{id}")
-    public Response getById(@PathParam("id") int id) {
+    public Response getById(@PathParam("id") int id, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Optional<Employer> employer = Dao.getById(id);
         if (employer.isPresent()) {
             return Response.ok(gson.toJson(employer.get())).build();
         } else {
-            JsonObject json = new JsonObject();
-            json.addProperty("error", MessageSource.getInstance().getMessage("usernotfound"));
-            return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
     }
 

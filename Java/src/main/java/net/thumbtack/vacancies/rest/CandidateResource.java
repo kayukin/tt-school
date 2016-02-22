@@ -1,14 +1,18 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.persistence.dao.*;
+import net.thumbtack.vacancies.rest.filter.Role;
+import net.thumbtack.vacancies.rest.filter.Secured;
+import net.thumbtack.vacancies.rest.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -16,6 +20,7 @@ import java.util.Optional;
  * Created by Konstantin on 17.02.2016.
  */
 @Path("api/candidate")
+@Secured({Role.CANDIDATE})
 public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
@@ -28,7 +33,6 @@ public class CandidateResource {
         Candidate candidate = gson.fromJson(body, Candidate.class);
         try {
             int id = Dao.create(candidate);
-            candidate.setId(id);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
             return Response.status(Response.Status.CREATED).entity(gson.toJson(candidate)).build();
         } catch (DuplicateLogin e) {
@@ -41,7 +45,11 @@ public class CandidateResource {
     @GET
     @Produces("application/json")
     @Path("/{id}")
-    public Response getById(@PathParam("id") int id) {
+    public Response getById(@PathParam("id") int id, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Optional<Candidate> candidate = Dao.getById(id);
         if (candidate.isPresent()) {
             return Response.ok(gson.toJson(candidate.get())).build();

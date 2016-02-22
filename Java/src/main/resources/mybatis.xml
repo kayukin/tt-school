@@ -19,5 +19,6 @@
     <mappers>
         <mapper resource="mappers/employer.xml"/>
         <mapper resource="mappers/candidate.xml"/>
+        <mapper resource="mappers/user.xml"/>
     </mappers>
 </configuration>

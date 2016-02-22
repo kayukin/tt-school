@@ -10,7 +10,6 @@
         <result column="firstname" property="firstName"/>
         <result column="lastname" property="lastName"/>
         <result column="email" property="email"/>
-        <result column="login" property="login"/>
         <collection property="offers" resultMap="offerMap"/>
     </resultMap>
 
@@ -37,7 +36,6 @@ e.`company`,
 e.`email`,
 e.`firstname`,
 e.`lastname`,
-e.`login`,
 O.`id` AS offer_id,
 O.`name` AS offer_name,
 O.`salary`,
@@ -60,10 +58,9 @@ LEFT JOIN skill_list SL ON R.`skill_id`=SL.`id`
         <include refid="selectEmployer"/>
     </select>
 
-    <insert id="create" parameterType="net.thumbtack.vacancies.domain.Employer" useGeneratedKeys="true"
-            keyProperty="id">
-        INSERT INTO employers (company, address, firstname, lastname, email, login, password)
-        VALUES (#{company}, #{address},#{firstName}, #{lastName}, #{email},#{login}, #{password})
+    <insert id="create" parameterType="net.thumbtack.vacancies.domain.Employer" keyProperty="id">
+        INSERT INTO employers (id, company, address, firstname, lastname, email)
+        VALUES (#{id}, #{company}, #{address},#{firstName}, #{lastName}, #{email})
 
     </insert>
 

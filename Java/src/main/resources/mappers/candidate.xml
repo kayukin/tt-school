@@ -36,9 +36,8 @@
         <include refid="selectCandidate"/>
     </select>
 
-    <insert id="create" parameterType="net.thumbtack.vacancies.domain.Candidate" useGeneratedKeys="true"
-            keyProperty="id">
-            INSERT INTO candidates (firstname, lastname, patronymic, email, login, password)
-            VALUES (#{firstName}, #{lastName},#{patronymic}, #{email}, #{login},#{password})
+    <insert id="create" parameterType="net.thumbtack.vacancies.domain.Candidate" keyProperty="id">
+            INSERT INTO candidates (id, firstname, lastname, patronymic, email)
+            VALUES (#{id}, #{firstName}, #{lastName}, #{patronymic}, #{email})
         </insert>
 </mapper>

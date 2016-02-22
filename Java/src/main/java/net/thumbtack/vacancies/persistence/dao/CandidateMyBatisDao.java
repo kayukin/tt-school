@@ -3,6 +3,7 @@ package net.thumbtack.vacancies.persistence.dao;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.CandidateMapper;
+import net.thumbtack.vacancies.persistence.mybatis.mapper.UserMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -30,15 +31,18 @@ public class CandidateMyBatisDao implements CandidateDao {
     @Override
     public int create(Candidate candidate) throws DuplicateLogin {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
-            CandidateMapper mapper = session.getMapper(CandidateMapper.class);
-            mapper.create(candidate);
-            session.commit();
-            return candidate.getId();
-        } catch (PersistenceException e) {
-            if (e.getMessage().contains("login_UNIQUE")) {
-                throw new DuplicateLogin(e);
+            try {
+                session.getMapper(UserMapper.class).createUser(candidate);
+                session.getMapper(CandidateMapper.class).create(candidate);
+                session.commit();
+                return candidate.getId();
+            } catch (PersistenceException e) {
+                session.rollback();
+                if (e.getMessage().contains("login_UNIQUE")) {
+                    throw new DuplicateLogin(e);
+                }
+                throw new RuntimeException(e);
             }
-            throw new RuntimeException(e);
         }
     }
 
