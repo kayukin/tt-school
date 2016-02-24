@@ -4,10 +4,10 @@ import net.thumbtack.vacancies.config.ConfigService;
 import net.thumbtack.vacancies.domain.User;
 import net.thumbtack.vacancies.rest.filter.Role;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionManager {
     private static final SessionManager INSTANCE = new SessionManager();
     private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
+    Random random = new SecureRandom();
+
 
     private SessionManager() {
     }
@@ -25,7 +27,7 @@ public class SessionManager {
     }
 
     public String createSession(User user, Role role) {
-        String sessionId = UUID.randomUUID().toString();
+        String sessionId = new BigInteger(130, random).toString(32);
         Session session = new Session(user, sessionId);
         session.setRole(role);
         sessions.put(sessionId, session);
