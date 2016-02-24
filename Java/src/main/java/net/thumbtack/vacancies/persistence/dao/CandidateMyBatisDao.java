@@ -1,8 +1,10 @@
 package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Candidate;
+import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.CandidateMapper;
+import net.thumbtack.vacancies.persistence.mybatis.mapper.SkillMapper;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.UserMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
@@ -59,6 +61,21 @@ public class CandidateMyBatisDao implements CandidateDao {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
             CandidateMapper mapper = session.getMapper(CandidateMapper.class);
             return mapper.getAll();
+        }
+    }
+
+    @Override
+    public void addSkillToCandidate(Candidate candidate, Skill skill) {
+        try (SqlSession session = MyBatis.getInstance().openSession()) {
+            SkillMapper skillMapper = session.getMapper(SkillMapper.class);
+            Skill skillFromDb = skillMapper.findByName(skill.getName());
+            if (skillFromDb == null) {
+                skillMapper.createSkill(skill);
+            } else {
+                skill.setId(skillFromDb.getId());
+            }
+            skillMapper.addSkillToCandidate(candidate, skill);
+            session.commit();
         }
     }
 }

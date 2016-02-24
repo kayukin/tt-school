@@ -3,6 +3,7 @@ package net.thumbtack.vacancies.rest;
 import com.google.gson.Gson;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
+import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.*;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
@@ -53,6 +54,26 @@ public class CandidateResource {
         Optional<Candidate> candidate = Dao.getById(id);
         if (candidate.isPresent()) {
             return Response.ok(gson.toJson(candidate.get())).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
+    }
+
+    @POST
+    @Produces("application/json")
+    @Path("/{id}/skill")
+    public Response addSkill(@PathParam("id") int id, String body, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Optional<Candidate> candidateOptional = Dao.getById(id);
+        if (candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
+            Skill skill = gson.fromJson(body, Skill.class);
+            Dao.addSkillToCandidate(candidate, skill);
+            return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(messageSource.getJsonErrorMessage("usernotfound")).build();

@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.SkillMapper">
+
+    <select id="findByName" resultType="net.thumbtack.vacancies.domain.Skill">
+        SELECT * FROM skill_list
+        WHERE name=#{name}
+    </select>
+
+    <insert id="createSkill" parameterType="net.thumbtack.vacancies.domain.Skill" keyProperty="id"
+            useGeneratedKeys="true">
+            INSERT INTO skill_list (name)
+            VALUES (#{name})
+        </insert>
+
+    <insert id="addSkillToCandidate" parameterType="map">
+        INSERT INTO skills (id_skill, level, id_candidate)
+        VALUES (#{skill.id}, #{skill.level}, #{candidate.id})
+    </insert>
+</mapper>
