@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.util.Properties;
 
 /**
@@ -60,6 +59,6 @@ public class ConfigService {
     }
 
     public long getSessionTime() {
-        return Long.parseLong(properties.getProperty("sessionexpirationtime"));
+        return Long.parseLong(properties.getProperty("session_expiration_time"));
     }
 }

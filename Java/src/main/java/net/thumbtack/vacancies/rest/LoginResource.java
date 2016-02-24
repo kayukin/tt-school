@@ -10,13 +10,12 @@ import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.UserMyBatisDao;
 import net.thumbtack.vacancies.rest.filter.Role;
+import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -57,5 +56,12 @@ public class LoginResource {
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+    }
+
+    @DELETE
+    @Produces("application/json")
+    public Response logout(@HeaderParam("token") String token) {
+        SessionManager.getInstance().removeSession(token);
+        return Response.ok().build();
     }
 }

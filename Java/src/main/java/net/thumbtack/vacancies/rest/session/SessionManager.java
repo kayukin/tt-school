@@ -40,9 +40,15 @@ public class SessionManager {
             if (Math.abs(session.getCreationDate() - System.currentTimeMillis()) <
                     ConfigService.getInstance().getSessionTime()) {
                 return Optional.of(session);
+            } else {
+                sessions.remove(token);
             }
         }
         return Optional.empty();
+    }
+
+    public void removeSession(String token) {
+        sessions.remove(token);
     }
 
 }
