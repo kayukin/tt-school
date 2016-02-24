@@ -9,6 +9,13 @@
         WHERE name=#{name}
     </select>
 
+    <select id="getCandidateSkills" resultType="net.thumbtack.vacancies.domain.Skill">
+        SELECT skills.id, skills.level, skill_list.name FROM skills
+        INNER JOIN skill_list
+        ON skills.id_skill=skill_list.id
+        WHERE id_candidate=#{id}
+    </select>
+
     <insert id="createSkill" parameterType="net.thumbtack.vacancies.domain.Skill" keyProperty="id"
             useGeneratedKeys="true">
             INSERT INTO skill_list (name)

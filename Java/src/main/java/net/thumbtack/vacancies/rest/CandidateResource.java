@@ -15,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -80,9 +81,29 @@ public class CandidateResource {
         }
     }
 
+
     @GET
     @Produces("application/json")
     public Response getAll() {
         return Response.ok(gson.toJson(Dao.getAll())).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/skill")
+    public Response getSkills(@PathParam("id") int id, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Optional<Candidate> candidateOptional = Dao.getById(id);
+        if (candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
+            List<Skill> candidateSkills = Dao.getCandidateSkills(candidate);
+            return Response.ok(gson.toJson(candidateSkills)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
     }
 }

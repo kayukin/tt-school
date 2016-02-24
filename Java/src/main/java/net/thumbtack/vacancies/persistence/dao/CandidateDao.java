@@ -17,4 +17,6 @@ public interface CandidateDao {
     List<Candidate> getAll();
 
     void addSkillToCandidate(Candidate candidate, Skill skill);
+
+    List<Skill> getCandidateSkills(Candidate candidate);
 }
