@@ -2,7 +2,10 @@ package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
 import net.thumbtack.vacancies.config.MessageSource;
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
+import net.thumbtack.vacancies.domain.Offer;
+import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.DuplicateCompany;
 import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.persistence.dao.EmployerDao;
@@ -18,6 +21,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,7 +29,6 @@ import java.util.Optional;
  */
 
 @Path("api/employer")
-@Secured({Role.EMPLOYER})
 public class EmployerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerResource.class);
     private static final Gson gson = new Gson();
@@ -51,6 +54,7 @@ public class EmployerResource {
         }
     }
 
+    @Secured({Role.EMPLOYER})
     @GET
     @Produces("application/json")
     @Path("/{id}")
@@ -64,6 +68,48 @@ public class EmployerResource {
             return Response.ok(gson.toJson(employer.get())).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
+    }
+
+    @Secured({Role.EMPLOYER})
+    @POST
+    @Produces("application/json")
+    @Path("/{id}/offer")
+    public Response addOffer(@PathParam("id") int id, String body, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Optional<Employer> employerOptional = Dao.getById(id);
+        if (employerOptional.isPresent()) {
+            Employer employer = employerOptional.get();
+            Offer offer = gson.fromJson(body, Offer.class);
+            //TODO Dao.addOfferToEmployer(employer, offer);
+
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
+    }
+
+    @Secured({Role.EMPLOYER})
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/offer")
+    public Response getOffers(@PathParam("id") int id, @Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        if (session.getUser().getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Optional<Employer> employerOptional = Dao.getById(id);
+        if (employerOptional.isPresent()) {
+            Employer employer = employerOptional.get();
+            List<Offer> employerOffers = employer.getOffers(); //Dao.getEmployerOffers(employer);
+            return Response.ok(gson.toJson(employerOffers)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
     }
 

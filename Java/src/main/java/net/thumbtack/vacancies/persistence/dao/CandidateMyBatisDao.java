@@ -78,12 +78,4 @@ public class CandidateMyBatisDao implements CandidateDao {
             session.commit();
         }
     }
-
-    @Override
-    public List<Skill> getCandidateSkills(Candidate candidate) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
-            SkillMapper skillMapper = session.getMapper(SkillMapper.class);
-            return skillMapper.getCandidateSkills(candidate);
-        }
-    }
 }

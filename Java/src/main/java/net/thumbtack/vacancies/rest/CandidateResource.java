@@ -22,7 +22,6 @@ import java.util.Optional;
  * Created by Konstantin on 17.02.2016.
  */
 @Path("api/candidate")
-@Secured({Role.CANDIDATE})
 public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
@@ -44,6 +43,7 @@ public class CandidateResource {
         }
     }
 
+    @Secured({Role.CANDIDATE})
     @GET
     @Produces("application/json")
     @Path("/{id}")
@@ -61,6 +61,7 @@ public class CandidateResource {
         }
     }
 
+    @Secured({Role.CANDIDATE})
     @POST
     @Produces("application/json")
     @Path("/{id}/skill")
@@ -81,13 +82,13 @@ public class CandidateResource {
         }
     }
 
-
     @GET
     @Produces("application/json")
     public Response getAll() {
         return Response.ok(gson.toJson(Dao.getAll())).build();
     }
 
+    @Secured({Role.CANDIDATE})
     @GET
     @Produces("application/json")
     @Path("/{id}/skill")
@@ -99,7 +100,7 @@ public class CandidateResource {
         Optional<Candidate> candidateOptional = Dao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
-            List<Skill> candidateSkills = Dao.getCandidateSkills(candidate);
+            List<Skill> candidateSkills = candidate.getSkills();
             return Response.ok(gson.toJson(candidateSkills)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
