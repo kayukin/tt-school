@@ -2,10 +2,8 @@ package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
 import net.thumbtack.vacancies.config.MessageSource;
-import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
-import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.DuplicateCompany;
 import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.persistence.dao.EmployerDao;
@@ -13,7 +11,7 @@ import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.Session;
-import net.thumbtack.vacancies.rest.session.SessionManager;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +37,7 @@ public class EmployerResource {
     @Produces("application/json")
     public Response create(String body) {
         Employer employer = gson.fromJson(body, Employer.class);
+        employer.setPassword(DigestUtils.sha1Hex(employer.getPassword()));
         try {
             int id = Dao.create(employer);
             LOGGER.info("User: {} was created with id: {}.", employer.getLogin(), id);

@@ -90,6 +90,11 @@
             <artifactId>jersey-test-framework-provider-jetty</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
 
     </dependencies>
 

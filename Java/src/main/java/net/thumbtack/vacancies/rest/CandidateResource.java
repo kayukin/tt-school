@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
-import net.thumbtack.vacancies.persistence.dao.*;
+import net.thumbtack.vacancies.persistence.dao.CandidateDao;
+import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
+import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.Session;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +35,7 @@ public class CandidateResource {
     @Produces("application/json")
     public Response create(String body) {
         Candidate candidate = gson.fromJson(body, Candidate.class);
+        candidate.setPassword(DigestUtils.sha1Hex(candidate.getPassword()));
         try {
             int id = Dao.create(candidate);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);

@@ -10,8 +10,8 @@ import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.UserMyBatisDao;
 import net.thumbtack.vacancies.rest.filter.Role;
-import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.SessionManager;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +30,12 @@ public class LoginResource {
     @Produces("application/json")
     public Response login(String body) {
         User credentials = gson.fromJson(body, User.class);
-        String password = credentials.getPassword();
+        String passwordHash = DigestUtils.sha1Hex(credentials.getPassword());
+        LOGGER.info("Hash: {}", passwordHash);
         Optional<User> userOptional = UserMyBatisDao.getInstance().getByLogin(credentials.getLogin());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (!password.equals(user.getPassword())) {
+            if (!passwordHash.equals(user.getPassword())) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(messageSource.getJsonErrorMessage("incorrectpassword")).build();
             }
