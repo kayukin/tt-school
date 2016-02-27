@@ -83,7 +83,7 @@ public class EmployerResource {
         if (employerOptional.isPresent()) {
             Employer employer = employerOptional.get();
             Offer offer = gson.fromJson(body, Offer.class);
-            //TODO Dao.addOfferToEmployer(employer, offer);
+            Dao.addOfferToEmployer(employer, offer);
 
             return Response.ok().build();
         } else {

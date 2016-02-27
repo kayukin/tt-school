@@ -1,8 +1,13 @@
 package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Employer;
+import net.thumbtack.vacancies.domain.Offer;
+import net.thumbtack.vacancies.domain.Requirement;
+import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper;
+import net.thumbtack.vacancies.persistence.mybatis.mapper.OfferMapper;
+import net.thumbtack.vacancies.persistence.mybatis.mapper.SkillMapper;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.UserMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
@@ -61,6 +66,25 @@ public class EmployerMyBatisDao implements EmployerDao {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
             EmployerMapper mapper = session.getMapper(EmployerMapper.class);
             return mapper.getAll();
+        }
+    }
+
+    @Override
+    public void addOfferToEmployer(Employer employer, Offer offer) {
+        try (SqlSession session = MyBatis.getInstance().openSession()) {
+            try {
+                OfferMapper offerMapper = session.getMapper(OfferMapper.class);
+                SkillMapper skillMapper = session.getMapper(SkillMapper.class);
+                offerMapper.createOffer(employer, offer);
+                for (Requirement req : offer.getRequirements()) {
+                    req.setId(SkillMyBatisDao.getInstance().getSkill(req.getName()).getId());
+                    offerMapper.createRequirement(req, offer);
+                }
+                session.commit();
+            } catch (PersistenceException e) {
+                session.rollback();
+                throw e;
+            }
         }
     }
 }

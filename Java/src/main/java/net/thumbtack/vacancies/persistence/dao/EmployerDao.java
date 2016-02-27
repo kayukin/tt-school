@@ -1,6 +1,7 @@
 package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Employer;
+import net.thumbtack.vacancies.domain.Offer;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,6 @@ public interface EmployerDao {
     Optional<Employer> getById(int id);
 
     List<Employer> getAll();
+
+    void addOfferToEmployer(Employer employer, Offer offer);
 }

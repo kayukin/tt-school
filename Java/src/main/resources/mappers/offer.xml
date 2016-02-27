@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.OfferMapper">
+
+    <insert id="createOffer" parameterType="map" keyProperty="offer.id"
+            useGeneratedKeys="true">
+        INSERT INTO offers (name, salary, id_employer)
+        VALUES (#{offer.name},#{offer.salary},#{employer.id})
+    </insert>
+
+    <insert id="createRequirement" parameterType="map" keyProperty="requirement.id" useGeneratedKeys="true">
+        INSERT INTO requirements (skill_id, level, isnecessary, id_offer)
+        VALUES (#{requirement.id}, #{requirement.level}, #{requirement.isNecessary}, #{offer.id})
+    </insert>
+
+
+</mapper>

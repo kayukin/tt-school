@@ -21,5 +21,6 @@
         <mapper resource="mappers/candidate.xml"/>
         <mapper resource="mappers/user.xml"/>
         <mapper resource="mappers/skill.xml"/>
+        <mapper resource="mappers/offer.xml"/>
     </mappers>
 </configuration>

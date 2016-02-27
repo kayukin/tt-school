@@ -1,6 +1,7 @@
 package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Employer;
+import net.thumbtack.vacancies.domain.Offer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,11 @@ public class EmployerInMemoryDao implements EmployerDao {
     @Override
     public List<Employer> getAll() {
         return new ArrayList<>(database.values());
+    }
+
+    @Override
+    public void addOfferToEmployer(Employer employer, Offer offer) {
+        //TODO
     }
 
 
