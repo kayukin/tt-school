@@ -10,12 +10,16 @@ import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.UserMyBatisDao;
 import net.thumbtack.vacancies.rest.filter.Role;
+import net.thumbtack.vacancies.rest.filter.Secured;
+import net.thumbtack.vacancies.rest.session.Session;
 import net.thumbtack.vacancies.rest.session.SessionManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -25,6 +29,15 @@ public class LoginResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginResource.class);
     private static final Gson gson = new Gson();
     private static MessageSource messageSource = MessageSource.getInstance();
+
+    @GET
+    @Secured({Role.CANDIDATE, Role.EMPLOYER})
+    @Produces("application/json")
+    public Response getUser(@Context ContainerRequestContext context) {
+        Session session = (Session) context.getProperty("session");
+        User user = session.getUser();
+        return Response.ok(gson.toJson(user)).build();
+    }
 
     @POST
     @Produces("application/json")
