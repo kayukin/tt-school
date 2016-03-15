@@ -1,6 +1,8 @@
 var main_view;
+var navbar_link;
 $(document).ready(function () {
     main_view = $('.main-view');
+    navbar_link = $('.bar-link');
     var token = Cookies.get('token');
     $.ajax({
         url: 'api/login',
@@ -39,9 +41,12 @@ var onFormSubmit = function (event) {
 var loadLoginPage = function () {
     $('.main-view').load('signin.html', function () {
         $('form').submit(onFormSubmit);
-        $('.bar-link').click(function (e) {
+        navbar_link.click(function (e) {
+            e.preventDefault();
             loadSignUpPage();
         });
+        navbar_link.text('Sign up');
+        navbar_link.prop('href', 'signup');
     });
 };
 
@@ -54,6 +59,16 @@ var loadMainPage = function () {
         dataType: "json",
         headers: {"token": token}
     }).done(function (user) {
+        navbar_link.text('Logout').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: 'api/login',
+                method: 'DELETE',
+                headers: {'token': token}
+            }).done(function () {
+                loadLoginPage();
+            });
+        });
         var html = '<div class="row"><div class="col-md-5">Добро пожаловать, ' + user.firstName + '</div></div>' +
             '<div class="row"><div class="dropdown"><button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" ' +
             'aria-expanded="false">Skills ' +
@@ -71,6 +86,11 @@ var loadSignUpPage = function () {
     main_view.load('signup.html', function () {
         $('form').submit(function (e) {
             e.preventDefault();
+        });
+        navbar_link.text('Login');
+        navbar_link.click(function (e) {
+            e.preventDefault();
+            loadLoginPage();
         });
     });
 };
