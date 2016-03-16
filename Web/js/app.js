@@ -1,6 +1,7 @@
 var main_view;
 var navbar_link;
 $(document).ready(function () {
+    $.ajaxSettings.timeout = 3000;
     main_view = $('.main-view');
     navbar_link = $('.bar-link');
     var token = Cookies.get('token');
@@ -69,14 +70,17 @@ var loadMainPage = function () {
                 loadLoginPage();
             });
         });
+        navbar_link.prop('href', '/logout');
         var html = '<div class="row"><div class="col-md-5">Добро пожаловать, ' + user.firstName + '</div></div>' +
             '<div class="row"><div class="dropdown"><button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" ' +
             'aria-expanded="false">Skills ' +
             '<span class="caret"></span> </button> ' +
             '<ul class="dropdown-menu" aria-labelledby="dLabel">';
-        user.skills.forEach(function (value) {
-            html += '<li>' + value.name + ' - ' + value.level + '</li>';
-        });
+        if (user.skills) {
+            user.skills.forEach(function (value) {
+                html += '<li>' + value.name + ' - ' + value.level + '</li>';
+            });
+        }
         html += '</ul></div></div>';
         main_view.html(html);
     });
@@ -84,8 +88,33 @@ var loadMainPage = function () {
 
 var loadSignUpPage = function () {
     main_view.load('signup.html', function () {
-        $('form').submit(function (e) {
+        $('.form-signup-candidate').submit(function (e) {
             e.preventDefault();
+            var formJson = JSON.stringify($(this).serializeObject());
+            $.ajax({
+                url: 'api/candidate',
+                method: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: formContentJSON
+            }).done(function (response) {
+                Cookies.set('token', response.token);
+                loadMainPage();
+            });
+        });
+        $('.form-signup-employer').submit(function (e) {
+            e.preventDefault();
+            var formJson = JSON.stringify($(this).serializeObject());
+            $.ajax({
+                url: 'api/employer',
+                method: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: formContentJSON
+            }).done(function (response) {
+                Cookies.set('token', response.token);
+                loadMainPage();
+            });
         });
         navbar_link.text('Login');
         navbar_link.click(function (e) {
@@ -93,4 +122,32 @@ var loadSignUpPage = function () {
             loadLoginPage();
         });
     });
+};
+
+jQuery.fn.serializeObject = function () {
+    var arrayData, objectData;
+    arrayData = this.serializeArray();
+    objectData = {};
+
+    $.each(arrayData, function () {
+        var value;
+
+        if (this.value != null) {
+            value = this.value;
+        } else {
+            value = '';
+        }
+
+        if (objectData[this.name] != null) {
+            if (!objectData[this.name].push) {
+                objectData[this.name] = [objectData[this.name]];
+            }
+
+            objectData[this.name].push(value);
+        } else {
+            objectData[this.name] = value;
+        }
+    });
+
+    return objectData;
 };

@@ -1,6 +1,7 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
@@ -10,6 +11,7 @@ import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.Session;
+import net.thumbtack.vacancies.rest.session.SessionManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,10 @@ public class CandidateResource {
         try {
             int id = Dao.create(candidate);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
-            return Response.status(Response.Status.CREATED).entity(gson.toJson(candidate)).build();
+            String sessionId = SessionManager.getInstance().createSession(candidate, Role.CANDIDATE);
+            JsonObject json = new JsonObject();
+            json.addProperty("token", sessionId);
+            return Response.ok(json.toString()).build();
         } catch (DuplicateLogin e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", candidate.getLogin());
             return Response.status(Response.Status.BAD_REQUEST)
