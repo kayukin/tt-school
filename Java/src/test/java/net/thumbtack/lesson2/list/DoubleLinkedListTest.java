@@ -2,7 +2,8 @@ package net.thumbtack.lesson2.list;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by kayuk_000 on 11.10.2015.

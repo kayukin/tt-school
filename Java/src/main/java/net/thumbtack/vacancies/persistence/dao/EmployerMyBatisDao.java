@@ -3,7 +3,6 @@ package net.thumbtack.vacancies.persistence.dao;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Requirement;
-import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.OfferMapper;
@@ -14,7 +13,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 

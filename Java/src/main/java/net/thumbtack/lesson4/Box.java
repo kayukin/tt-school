@@ -1,7 +1,5 @@
 package net.thumbtack.lesson4;
 
-import net.thumbtack.lesson1.Rectangle;
-
 /**
  * Created by kayukin on 25.10.15.
  */

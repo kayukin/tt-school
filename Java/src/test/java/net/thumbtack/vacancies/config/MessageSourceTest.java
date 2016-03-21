@@ -2,7 +2,7 @@ package net.thumbtack.vacancies.config;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Konstantin on 17.02.2016.

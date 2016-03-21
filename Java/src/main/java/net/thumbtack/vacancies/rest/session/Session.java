@@ -3,8 +3,6 @@ package net.thumbtack.vacancies.rest.session;
 import net.thumbtack.vacancies.domain.User;
 import net.thumbtack.vacancies.rest.filter.Role;
 
-import java.util.Date;
-
 /**
  * Created by Konstantin on 22.02.2016.
  */

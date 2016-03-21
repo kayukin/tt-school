@@ -2,10 +2,8 @@ package net.thumbtack.rest.resources;
 
 import com.google.gson.Gson;
 import net.thumbtack.rest.models.User;
-import net.thumbtack.rest.persistence.InMemoryUserDao;
 import net.thumbtack.rest.persistence.JdbcUserDao;
 import net.thumbtack.rest.persistence.UserDao;
-
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

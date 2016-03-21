@@ -1,9 +1,5 @@
 package net.thumbtack.lesson1;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-
-import java.io.IOException;
-
 /**
  * Created by kayuk_000 on 04.10.2015.
  */

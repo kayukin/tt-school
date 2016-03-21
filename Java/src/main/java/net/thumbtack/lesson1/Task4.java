@@ -1,7 +1,5 @@
 package net.thumbtack.lesson1;
 
-import java.awt.geom.Point2D;
-
 /**
  * Created by kayuk_000 on 04.10.2015.
  */
@@ -11,9 +9,9 @@ public class Task4 {
         int x = 20, y = 20;
 
         if ((x > x1 && x < x2 && y > y1 && y < y2) || (x < x1 && x > x2 && y < y1 && y > y2))
-            System.out.println("Точка лежит в прямоугольнике");
+            System.out.println("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         else
-            System.out.println("Точка не лежит в прямоугольнике");
+            System.out.println("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 
     }
 }

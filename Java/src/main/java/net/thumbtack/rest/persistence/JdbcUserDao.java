@@ -2,10 +2,9 @@ package net.thumbtack.rest.persistence;
 
 import net.thumbtack.rest.models.User;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.sql.*;
-import java.util.List;
 
 /**
  * Created by Konstantin on 01.02.2016.

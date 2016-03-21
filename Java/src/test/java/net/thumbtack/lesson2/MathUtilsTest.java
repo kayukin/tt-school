@@ -2,7 +2,7 @@ package net.thumbtack.lesson2;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by kayuk_000 on 11.10.2015.

@@ -1,7 +1,5 @@
 package net.thumbtack.lesson4;
 
-import net.thumbtack.lesson1.Circle;
-import net.thumbtack.lesson1.Rectangle;
 import net.thumbtack.lesson3.Figure;
 
 /**
