@@ -1,5 +1,6 @@
 package net.thumbtack.vacancies.persistence.dao;
 
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 
@@ -17,4 +18,6 @@ public interface EmployerDao {
     List<Employer> getAll();
 
     void addOfferToEmployer(Employer employer, Offer offer);
+
+    List<Candidate> getCandidates(Offer offer);
 }

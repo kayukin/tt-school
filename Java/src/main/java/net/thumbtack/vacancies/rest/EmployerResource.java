@@ -3,6 +3,7 @@ package net.thumbtack.vacancies.rest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.persistence.dao.DuplicateCompany;
@@ -121,5 +122,14 @@ public class EmployerResource {
     @Produces("application/json")
     public Response getAll() {
         return Response.ok(gson.toJson(Dao.getAll())).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    //@Secured({Role.EMPLOYER})
+    @Path("/{id}/offer/{offerId}")
+    public Response getCandidates() {
+        List<Candidate> list = Dao.getCandidates(new Offer("a", 10, null));
+        return Response.ok(gson.toJson(list)).build();
     }
 }

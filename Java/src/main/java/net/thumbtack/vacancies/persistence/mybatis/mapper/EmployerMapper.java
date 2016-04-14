@@ -1,6 +1,8 @@
 package net.thumbtack.vacancies.persistence.mybatis.mapper;
 
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
+import net.thumbtack.vacancies.domain.Offer;
 
 import java.util.List;
 
@@ -13,4 +15,5 @@ public interface EmployerMapper {
     Employer getById(int id);
 
     List<Employer> getAll();
+    List<Candidate> getCandidates(Offer offer);
 }

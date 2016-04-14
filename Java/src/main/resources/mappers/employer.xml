@@ -58,6 +58,13 @@ LEFT JOIN skill_list SL ON R.`skill_id`=SL.`id`
         <include refid="selectEmployer"/>
     </select>
 
+    <select id="getCandidates">
+        SELECT *
+        FROM candidates
+        LEFT JOIN skills ON candidates.id = skills.id_candidate
+
+    </select>
+
     <insert id="create" parameterType="net.thumbtack.vacancies.domain.Employer" keyProperty="id">
         INSERT INTO employers (id, company, address, firstname, lastname, email)
         VALUES (#{id}, #{company}, #{address},#{firstName}, #{lastName}, #{email})

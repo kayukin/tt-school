@@ -11,6 +11,7 @@ public class User extends Entity {
     private String password;
 
     private User() {
+
     }
 
     public User(String email, String firstName, String lastName, String login, String password) {

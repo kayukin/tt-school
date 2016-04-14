@@ -27,7 +27,7 @@
         </triggeringPolicy>
     </appender>
 
-    <logger name="net.thumbtack.vacancies" level="DEBUG" additivity="false">
+    <logger name="net.thumbtack.vacancies" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="log"/>
     </logger>

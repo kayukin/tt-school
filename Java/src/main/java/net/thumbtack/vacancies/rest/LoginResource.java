@@ -1,6 +1,7 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
@@ -36,8 +37,10 @@ public class LoginResource {
     @Produces("application/json")
     public Response getUser(@Context ContainerRequestContext context) {
         Session session = (Session) context.getProperty("session");
-        User user = session.getUser();
-        return Response.ok(gson.toJson(user)).build();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("user", gson.toJsonTree(session.getUser()));
+        jsonObject.addProperty("class", session.getUser().getClass().getSimpleName());
+        return Response.ok(jsonObject.toString()).build();
     }
 
     @POST

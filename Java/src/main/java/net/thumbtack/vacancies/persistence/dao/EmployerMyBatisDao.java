@@ -1,5 +1,6 @@
 package net.thumbtack.vacancies.persistence.dao;
 
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Requirement;
@@ -81,6 +82,18 @@ public class EmployerMyBatisDao implements EmployerDao {
                 session.commit();
             } catch (PersistenceException e) {
                 session.rollback();
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public List<Candidate> getCandidates(Offer offer) {
+        try (SqlSession session = MyBatis.getInstance().openSession()) {
+            try {
+                EmployerMapper employerMapper = session.getMapper(EmployerMapper.class);
+                return employerMapper.getCandidates(offer);
+            } catch (PersistenceException e) {
                 throw e;
             }
         }

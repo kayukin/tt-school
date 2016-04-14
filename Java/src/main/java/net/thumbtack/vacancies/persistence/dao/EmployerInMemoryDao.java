@@ -1,5 +1,6 @@
 package net.thumbtack.vacancies.persistence.dao;
 
+import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 
@@ -10,9 +11,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by Konstantin on 15.02.2016.
- */
 public class EmployerInMemoryDao implements EmployerDao {
     private final static EmployerDao INSTANCE = new EmployerInMemoryDao();
 
@@ -21,11 +19,6 @@ public class EmployerInMemoryDao implements EmployerDao {
     }
 
     private static final Map<Integer, Employer> database = new ConcurrentHashMap<>();
-
-    static {
-        database.put(1, new Employer(1, "job@thumbtack.net", "Ivan", "Ivanov"
-                , "login", "pass", "thumbtack", "Jukova", null));
-    }
 
     private static final AtomicInteger nextId = new AtomicInteger(0);
 
@@ -49,7 +42,16 @@ public class EmployerInMemoryDao implements EmployerDao {
 
     @Override
     public void addOfferToEmployer(Employer employer, Offer offer) {
-        //TODO
+        database.get(employer.getId()).getOffers().add(offer);
+    }
+
+    @Override
+    public List<Candidate> getCandidates(Offer offer) {
+        List<Candidate> allCandidates = CandidateInMemoryDao.getInstance().getAll();
+        allCandidates.stream()
+                .filter(candidate -> !candidate.getSkills().containsAll(offer.getRequirements()))
+                .forEach(allCandidates::remove);
+        return allCandidates;
     }
 
 
