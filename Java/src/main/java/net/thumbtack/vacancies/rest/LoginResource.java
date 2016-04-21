@@ -48,7 +48,7 @@ public class LoginResource {
     public Response login(String body) {
         User credentials = gson.fromJson(body, User.class);
         String passwordHash = DigestUtils.sha1Hex(credentials.getPassword());
-        LOGGER.info("Hash: {}", passwordHash);
+        LOGGER.debug("Hash: {}", passwordHash);
         Optional<User> userOptional = UserMyBatisDao.getInstance().getByLogin(credentials.getLogin());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
