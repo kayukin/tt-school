@@ -6,7 +6,6 @@ import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.CandidateDao;
-import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
 import net.thumbtack.vacancies.persistence.dao.DuplicateLogin;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
@@ -15,6 +14,8 @@ import net.thumbtack.vacancies.rest.session.SessionManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -23,14 +24,13 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Konstantin on 17.02.2016.
- */
+@Component
 @Path("api/candidate")
 public class CandidateResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateResource.class);
     private static final Gson gson = new Gson();
-    private static volatile CandidateDao Dao = CandidateMyBatisDao.getInstance();
+    @Autowired
+    private static volatile CandidateDao candidateDao;
     private static MessageSource messageSource = MessageSource.getInstance();
 
     @POST
@@ -39,7 +39,7 @@ public class CandidateResource {
         Candidate candidate = gson.fromJson(body, Candidate.class);
         candidate.setPassword(DigestUtils.sha1Hex(candidate.getPassword()));
         try {
-            int id = Dao.create(candidate);
+            int id = candidateDao.create(candidate);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
             String sessionId = SessionManager.getInstance().createSession(candidate, Role.CANDIDATE);
             JsonObject json = new JsonObject();
@@ -61,7 +61,7 @@ public class CandidateResource {
         if (session.getUser().getId() != id) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Optional<Candidate> candidate = Dao.getById(id);
+        Optional<Candidate> candidate = candidateDao.getById(id);
         if (candidate.isPresent()) {
             return Response.ok(gson.toJson(candidate.get())).build();
         } else {
@@ -79,11 +79,11 @@ public class CandidateResource {
         if (session.getUser().getId() != id) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Optional<Candidate> candidateOptional = Dao.getById(id);
+        Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
             Skill skill = gson.fromJson(body, Skill.class);
-            Dao.addSkillToCandidate(candidate, skill);
+            candidateDao.addSkillToCandidate(candidate, skill);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
@@ -94,7 +94,7 @@ public class CandidateResource {
     @GET
     @Produces("application/json")
     public Response getAll() {
-        return Response.ok(gson.toJson(Dao.getAll())).build();
+        return Response.ok(gson.toJson(candidateDao.getAll())).build();
     }
 
     @Secured({Role.CANDIDATE})
@@ -106,7 +106,7 @@ public class CandidateResource {
         if (session.getUser().getId() != id) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Optional<Candidate> candidateOptional = Dao.getById(id);
+        Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
             List<Skill> candidateSkills = candidate.getSkills();

@@ -20,14 +20,6 @@ import java.util.Optional;
 public class CandidateMyBatisDao implements CandidateDao {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CandidateMyBatisDao.class);
-    private final static CandidateMyBatisDao INSTANCE = new CandidateMyBatisDao();
-
-    private CandidateMyBatisDao() {
-    }
-
-    public static CandidateMyBatisDao getInstance() {
-        return INSTANCE;
-    }
 
     @Override
     public int create(Candidate candidate) throws DuplicateLogin {
