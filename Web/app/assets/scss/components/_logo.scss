@@ -1,0 +1,18 @@
+.logo {
+  padding: 10px 10px;
+  display: inline-block;
+  position: relative;
+
+  img{
+    height:30px;
+    display: inline;
+  }
+  span {
+    top:0;
+    left:80px;
+    font-size: 14px;
+    color: #76c342;
+    font-weight: bold;
+    position: absolute;
+  }
+}

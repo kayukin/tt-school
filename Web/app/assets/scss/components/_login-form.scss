@@ -1,0 +1,27 @@
+.user-login-form {
+  width: 200px;
+  padding: 20px;
+  border:1px solid #000;
+  margin: 20px auto;
+  text-align: right;
+}
+
+.user-login-form label{
+  display: inline-block;
+  float: left;
+}
+
+.user-login-form .field-text input {
+  width: 120px;
+}
+
+.user-login-form .field {
+  padding: 5px 0;
+}
+.user-login-form .field-submit {
+  text-align: right;
+}
+
+.error {
+  color: red;
+}
