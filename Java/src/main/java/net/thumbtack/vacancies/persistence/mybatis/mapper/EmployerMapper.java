@@ -15,5 +15,6 @@ public interface EmployerMapper {
     Employer getById(int id);
 
     List<Employer> getAll();
+
     List<Candidate> getCandidates(Offer offer);
 }

@@ -7,9 +7,6 @@ import net.thumbtack.vacancies.domain.Skill;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Konstantin on 22.04.2016.
- */
 public class CompareService {
     private CompareService() {
 

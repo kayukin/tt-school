@@ -1,15 +1,12 @@
 package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.User;
-import net.thumbtack.vacancies.persistence.dao.CandidateMyBatisDao;
-import net.thumbtack.vacancies.persistence.dao.EmployerMyBatisDao;
-import net.thumbtack.vacancies.persistence.dao.UserMyBatisDao;
+import net.thumbtack.vacancies.persistence.dao.*;
 import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
 import net.thumbtack.vacancies.rest.session.Session;
@@ -21,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -31,6 +27,10 @@ public class LoginResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginResource.class);
     private static final Gson gson = new Gson();
     private static MessageSource messageSource = MessageSource.getInstance();
+
+    private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
+    private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
+    private static volatile UserDao userDao = UserMyBatisDao.getInstance();
 
     @GET
     @Secured({Role.CANDIDATE, Role.EMPLOYER})
@@ -49,15 +49,15 @@ public class LoginResource {
         User credentials = gson.fromJson(body, User.class);
         String passwordHash = DigestUtils.sha1Hex(credentials.getPassword());
         LOGGER.debug("Hash: {}", passwordHash);
-        Optional<User> userOptional = UserMyBatisDao.getInstance().getByLogin(credentials.getLogin());
+        Optional<User> userOptional = userDao.getByLogin(credentials.getLogin());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (!passwordHash.equals(user.getPassword())) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(messageSource.getJsonErrorMessage("incorrectpassword")).build();
             }
-            Optional<Employer> employerOptional = EmployerMyBatisDao.getInstance().getById(user.getId());
-            Optional<Candidate> candidateOptional = CandidateMyBatisDao.getInstance().getById(user.getId());
+            Optional<Employer> employerOptional = employerDao.getById(user.getId());
+            Optional<Candidate> candidateOptional = candidateDao.getById(user.getId());
             if (employerOptional.isPresent()) {
                 Employer employer = employerOptional.get();
                 String sessionId = SessionManager.getInstance().createSession(employer, Role.EMPLOYER);

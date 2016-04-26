@@ -3,7 +3,7 @@ package net.thumbtack.vacancies.domain;
 /**
  * Created by Konstantin on 15.02.2016.
  */
-public class Skill extends Entity{
+public class Skill extends Entity {
     private String name;
     private int level;
 

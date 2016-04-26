@@ -31,11 +31,11 @@
     <sql id="selectEmployer">
 SELECT
 E.`id` AS employer_id,
-e.`address`,
-e.`company`,
-e.`email`,
-e.`firstname`,
-e.`lastname`,
+E.`address`,
+E.`company`,
+E.`email`,
+E.`firstname`,
+E.`lastname`,
 O.`id` AS offer_id,
 O.`name` AS offer_name,
 O.`salary`,
