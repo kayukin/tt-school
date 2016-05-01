@@ -30,7 +30,7 @@
 
     <sql id="selectEmployer">
 SELECT
-E.`id` AS employer_id,
+E.id AS employer_id,
 E.`address`,
 E.`company`,
 E.`email`,
@@ -39,7 +39,7 @@ E.`lastname`,
 O.`id` AS offer_id,
 O.`name` AS offer_name,
 O.`salary`,
-R.`id` AS requirement_id,
+R.skill_id AS requirement_id,
 R.`isnecessary`,
 R.`level`,
 SL.`name` AS skill_name

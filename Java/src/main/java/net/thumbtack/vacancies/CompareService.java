@@ -4,8 +4,8 @@ import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Requirement;
 import net.thumbtack.vacancies.domain.Skill;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompareService {
     private CompareService() {
@@ -19,16 +19,12 @@ public class CompareService {
     }
 
     public List<Candidate> filterCandidates(List<Candidate> candidates, List<Requirement> requirements) {
-        List<Candidate> list = new ArrayList<>();
-        for (Candidate candidate : candidates) {
-            if (isAccept(candidate.getSkills(), requirements)) {
-                list.add(candidate);
-            }
-        }
-        return list;
+        return candidates
+                .stream()
+                .filter(candidate -> isAccept(candidate.getSkills(), requirements)).collect(Collectors.toList());
     }
 
-    public boolean isAccept(List<Skill> skills, List<Requirement> requirements) {
+    boolean isAccept(List<Skill> skills, List<Requirement> requirements) {
         for (Requirement requirement : requirements) {
             Skill skillFromReq = new Skill(requirement.getId(), requirement.getName(), requirement.getLevel());
             if (!skills.contains(skillFromReq)) {

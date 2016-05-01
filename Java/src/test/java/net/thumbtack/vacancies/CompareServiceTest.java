@@ -28,5 +28,4 @@ public class CompareServiceTest {
         skills.get(0).setLevel(1);
         assertFalse(CompareService.getInstance().isAccept(skills, requirements));
     }
-
 }
