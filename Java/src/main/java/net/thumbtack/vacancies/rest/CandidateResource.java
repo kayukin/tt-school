@@ -2,8 +2,11 @@ package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import net.thumbtack.vacancies.CompareService;
+import net.thumbtack.vacancies.CompareServiceImpl;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
+import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.*;
 import net.thumbtack.vacancies.rest.filter.Secured;
@@ -29,6 +32,7 @@ public class CandidateResource {
 
     private static MessageSource messageSource = MessageSource.getInstance();
     private static volatile TokenService tokenService = JWTService.getInstance();
+    private static volatile CompareService compareService = CompareServiceImpl.getInstance();
 
     @POST
     @Produces("application/json")
@@ -38,9 +42,9 @@ public class CandidateResource {
         try {
             int id = candidateDao.create(candidate);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
-            String sessionId = tokenService.createToken(candidate);
+            String token = tokenService.createToken(candidate);
             JsonObject json = new JsonObject();
-            json.addProperty("token", sessionId);
+            json.addProperty("token", token);
             return Response.ok(json.toString()).build();
         } catch (DuplicateLogin e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", candidate.getLogin());
@@ -109,6 +113,27 @@ public class CandidateResource {
             Candidate candidate = candidateOptional.get();
             List<Skill> candidateSkills = candidate.getSkills();
             return Response.ok(gson.toJson(candidateSkills)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
+    }
+
+    @Secured
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/offers")
+    public Response getOffers(@PathParam("id") int id, @Context ContainerRequestContext context) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
+            return Response.status(Response.Status.FORBIDDEN).build();
+        Optional<Candidate> candidateOptional = candidateDao.getById(id);
+        if (candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
+            List<Offer> allOffers = null;
+            List<Offer> offers = compareService.filterOffers(allOffers, candidate.getSkills());
+            return Response.ok(gson.toJson(offers)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(messageSource.getJsonErrorMessage("usernotfound")).build();

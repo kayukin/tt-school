@@ -36,8 +36,18 @@ public class LoginResource {
     @Secured
     @Produces("application/json")
     public Response getUser(@Context ContainerRequestContext context) {
+        String token = context.getHeaderString("token");
+        int userId = tokenService.getUserId(token);
         JsonObject jsonObject = new JsonObject();
-        //TODO add user
+        Optional<Candidate> candidate = candidateDao.getById(userId);
+        if (candidate.isPresent()) {
+            jsonObject.add("candidate", gson.toJsonTree(candidate.get()));
+        } else {
+            Optional<Employer> employer = employerDao.getById(userId);
+            if (employer.isPresent()) {
+                jsonObject.add("employer", gson.toJsonTree(employer.get()));
+            }
+        }
         return Response.ok(jsonObject.toString()).build();
     }
 

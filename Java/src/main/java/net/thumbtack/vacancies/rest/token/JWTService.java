@@ -1,9 +1,13 @@
 package net.thumbtack.vacancies.rest.token;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.impl.compression.CompressionCodecs;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 import net.thumbtack.vacancies.config.ConfigService;
 import net.thumbtack.vacancies.domain.User;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 public class JWTService implements TokenService {
@@ -21,8 +25,11 @@ public class JWTService implements TokenService {
     @Override
     public String createToken(User user) {
         return Jwts.builder()
+                .setIssuedAt(new Date())
                 .setSubject(user.getLogin())
+                .setExpiration(new Date(System.currentTimeMillis() + configService.getTokenTTL()))
                 .claim("userId", user.getId())
+                .compressWith(CompressionCodecs.GZIP)
                 .signWith(SignatureAlgorithm.HS256, configService.getKey())
                 .compact();
     }

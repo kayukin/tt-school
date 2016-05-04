@@ -62,7 +62,7 @@ public class ConfigService {
         return properties.getProperty("jwt_key");
     }
 
-    public long getSessionTime() {
-        return Long.parseLong(properties.getProperty("session_expiration_time"));
+    public long getTokenTTL() {
+        return Long.parseLong(properties.getProperty("token_ttl"));
     }
 }

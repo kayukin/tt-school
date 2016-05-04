@@ -126,7 +126,7 @@ public class EmployerResource {
     @GET
     @Produces("application/json")
     @Secured
-    @Path("/{id}/offer/{offerId}")
+    @Path("/{id}/offer/{offerId}/candidates")
     public Response getCandidates(@PathParam("id") int id, @PathParam("offerId") int offerId, @Context ContainerRequestContext context) {
         String token = context.getHeaderString("token");
         int tokenId = tokenService.getUserId(token);
@@ -141,6 +141,30 @@ public class EmployerResource {
                 List<Candidate> result = compareService
                         .filterCandidates(candidateDao.getAll(), offer.getRequirements());
                 return Response.ok(gson.toJson(result)).build();
+            }
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+        }
+    }
+
+    @GET
+    @Produces("application/json")
+    @Secured
+    @Path("/{id}/offer/{offerId}")
+    public Response getOffer(@PathParam("id") int id, @PathParam("offerId") int offerId, @Context ContainerRequestContext context) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
+            return Response.status(Response.Status.FORBIDDEN).build();
+        Optional<Employer> employerOptional = employerDao.getById(id);
+        if (employerOptional.isPresent()) {
+            Employer employer = employerOptional.get();
+            List<Offer> employerOffers = employer.getOffers();
+            Offer offer = employerOffers.get(employerOffers.indexOf(new Offer(offerId, null, 0, null)));
+            if (offer != null) {
+                return Response.ok(gson.toJson(offer)).build();
             }
             return Response.ok().build();
         } else {
