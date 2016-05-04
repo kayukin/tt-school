@@ -1,6 +1,5 @@
 package net.thumbtack.vacancies;
 
-import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Requirement;
 import net.thumbtack.vacancies.domain.Skill;
 import org.junit.Test;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Konstantin on 22.04.2016.
  */
-public class CompareServiceTest {
+public class CompareServiceImplTest {
 
     @Test
     public void isAccept() throws Exception {
@@ -24,8 +23,8 @@ public class CompareServiceTest {
         List<Skill> skills = new ArrayList<>();
         skills.add(new Skill(0, "Java", 5));
         skills.add(new Skill(1, "C#", 4));
-        assertTrue(CompareService.getInstance().isAccept(skills, requirements));
+        assertTrue(CompareServiceImpl.getInstance().isAccept(skills, requirements));
         skills.get(0).setLevel(1);
-        assertFalse(CompareService.getInstance().isAccept(skills, requirements));
+        assertFalse(CompareServiceImpl.getInstance().isAccept(skills, requirements));
     }
 }

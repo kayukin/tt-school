@@ -58,6 +58,10 @@ public class ConfigService {
         return properties.getProperty("URI");
     }
 
+    public String getKey() {
+        return properties.getProperty("jwt_key");
+    }
+
     public long getSessionTime() {
         return Long.parseLong(properties.getProperty("session_expiration_time"));
     }

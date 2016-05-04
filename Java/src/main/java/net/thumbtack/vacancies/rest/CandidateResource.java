@@ -6,10 +6,9 @@ import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
 import net.thumbtack.vacancies.persistence.dao.*;
-import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
-import net.thumbtack.vacancies.rest.session.Session;
-import net.thumbtack.vacancies.rest.session.SessionManager;
+import net.thumbtack.vacancies.rest.token.JWTService;
+import net.thumbtack.vacancies.rest.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +28,7 @@ public class CandidateResource {
     private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
 
     private static MessageSource messageSource = MessageSource.getInstance();
+    private static volatile TokenService tokenService = JWTService.getInstance();
 
     @POST
     @Produces("application/json")
@@ -38,7 +38,7 @@ public class CandidateResource {
         try {
             int id = candidateDao.create(candidate);
             LOGGER.info("User: {} was created with id: {}.", candidate.getLogin(), id);
-            String sessionId = SessionManager.getInstance().createSession(candidate, Role.CANDIDATE);
+            String sessionId = tokenService.createToken(candidate);
             JsonObject json = new JsonObject();
             json.addProperty("token", sessionId);
             return Response.ok(json.toString()).build();
@@ -49,33 +49,34 @@ public class CandidateResource {
         }
     }
 
-    @Secured({Role.CANDIDATE})
+    @Secured
     @GET
     @Produces("application/json")
     @Path("/{id}")
     public Response getById(@PathParam("id") int id, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        Optional<Candidate> candidate = candidateDao.getById(id);
-        if (candidate.isPresent()) {
-            return Response.ok(gson.toJson(candidate.get())).build();
+        Optional<Candidate> candidateOptional = candidateDao.getById(id);
+        if (candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
+            return Response.ok(gson.toJson(candidate)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
     }
 
-    @Secured({Role.CANDIDATE})
+    @Secured
     @POST
     @Produces("application/json")
     @Path("/{id}/skill")
     public Response addSkill(@PathParam("id") int id, String body, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
         Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
@@ -94,15 +95,15 @@ public class CandidateResource {
         return Response.ok(gson.toJson(candidateDao.getAll())).build();
     }
 
-    @Secured({Role.CANDIDATE})
+    @Secured
     @GET
     @Produces("application/json")
     @Path("/{id}/skill")
     public Response getSkills(@PathParam("id") int id, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
         Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();

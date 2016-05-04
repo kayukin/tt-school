@@ -3,15 +3,15 @@ package net.thumbtack.vacancies.rest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.CompareService;
+import net.thumbtack.vacancies.CompareServiceImpl;
 import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.persistence.dao.*;
-import net.thumbtack.vacancies.rest.filter.Role;
 import net.thumbtack.vacancies.rest.filter.Secured;
-import net.thumbtack.vacancies.rest.session.Session;
-import net.thumbtack.vacancies.rest.session.SessionManager;
+import net.thumbtack.vacancies.rest.token.JWTService;
+import net.thumbtack.vacancies.rest.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +23,6 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Konstantin on 15.02.2016.
- */
 
 @Path("api/employer")
 public class EmployerResource {
@@ -34,6 +31,8 @@ public class EmployerResource {
     private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
     private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
     private static MessageSource messageSource = MessageSource.getInstance();
+    private static volatile TokenService tokenService = JWTService.getInstance();
+    private static volatile CompareService compareService = CompareServiceImpl.getInstance();
 
     @POST
     @Produces("application/json")
@@ -43,9 +42,9 @@ public class EmployerResource {
         try {
             int id = employerDao.create(employer);
             LOGGER.info("User: {} was created with id: {}.", employer.getLogin(), id);
-            String sessionId = SessionManager.getInstance().createSession(employer, Role.EMPLOYER);
+            String token = tokenService.createToken(employer);
             JsonObject json = new JsonObject();
-            json.addProperty("token", sessionId);
+            json.addProperty("token", token);
             return Response.ok(json.toString()).build();
         } catch (DuplicateLogin e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", employer.getLogin());
@@ -58,38 +57,39 @@ public class EmployerResource {
         }
     }
 
-    @Secured({Role.EMPLOYER})
+    @Secured
     @GET
     @Produces("application/json")
     @Path("/{id}")
     public Response getById(@PathParam("id") int id, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        Optional<Employer> employer = employerDao.getById(id);
-        if (employer.isPresent()) {
-            return Response.ok(gson.toJson(employer.get())).build();
+        Optional<Employer> employerOptional = employerDao.getById(id);
+        if (employerOptional.isPresent()) {
+            Employer employer = employerOptional.get();
+            return Response.ok(gson.toJson(employer)).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
     }
 
-    @Secured({Role.EMPLOYER})
+    @Secured
     @POST
     @Produces("application/json")
     @Path("/{id}/offer")
     public Response addOffer(@PathParam("id") int id, String body, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
         Optional<Employer> employerOptional = employerDao.getById(id);
         if (employerOptional.isPresent()) {
             Employer employer = employerOptional.get();
             Offer offer = gson.fromJson(body, Offer.class);
             employerDao.addOfferToEmployer(employer, offer);
-
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
@@ -97,15 +97,15 @@ public class EmployerResource {
         }
     }
 
-    @Secured({Role.EMPLOYER})
+    @Secured
     @GET
     @Produces("application/json")
     @Path("/{id}/offer")
     public Response getOffers(@PathParam("id") int id, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
         Optional<Employer> employerOptional = employerDao.getById(id);
         if (employerOptional.isPresent()) {
             Employer employer = employerOptional.get();
@@ -125,25 +125,27 @@ public class EmployerResource {
 
     @GET
     @Produces("application/json")
-    @Secured({Role.EMPLOYER})
+    @Secured
     @Path("/{id}/offer/{offerId}")
     public Response getCandidates(@PathParam("id") int id, @PathParam("offerId") int offerId, @Context ContainerRequestContext context) {
-        Session session = (Session) context.getProperty("session");
-        if (session.getUser().getId() != id) {
+        String token = context.getHeaderString("token");
+        int tokenId = tokenService.getUserId(token);
+        if (tokenId != id)
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
         Optional<Employer> employerOptional = employerDao.getById(id);
         if (employerOptional.isPresent()) {
             Employer employer = employerOptional.get();
             List<Offer> employerOffers = employer.getOffers();
             Offer offer = employerOffers.get(employerOffers.indexOf(new Offer(offerId, null, 0, null)));
             if (offer != null) {
-                List<Candidate> result = CompareService.getInstance()
+                List<Candidate> result = compareService
                         .filterCandidates(candidateDao.getAll(), offer.getRequirements());
                 return Response.ok(gson.toJson(result)).build();
             }
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
         }
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
     }
 }
