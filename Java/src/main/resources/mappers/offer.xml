@@ -4,6 +4,20 @@
 
 <mapper namespace="net.thumbtack.vacancies.persistence.mybatis.mapper.OfferMapper">
 
+    <select id="getOffers" resultMap="net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper.offerMap">
+        SELECT
+            O.`id`     AS offer_id,
+            O.`name`   AS offer_name,
+            O.`salary`,
+            R.skill_id AS requirement_id,
+            R.`isnecessary`,
+            R.`level`,
+            SL.`name`  AS skill_name
+        FROM offers O
+            LEFT JOIN requirements R ON O.`id` = R.`id_offer`
+            LEFT JOIN skill_list SL ON R.`skill_id` = SL.`id`
+    </select>
+
     <insert id="createOffer" parameterType="map" keyProperty="offer.id"
             useGeneratedKeys="true">
         INSERT INTO offers (name, salary, id_employer)

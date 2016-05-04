@@ -76,7 +76,7 @@ public class EmployerMyBatisDao implements EmployerDao {
                 SkillMapper skillMapper = session.getMapper(SkillMapper.class);
                 offerMapper.createOffer(employer, offer);
                 for (Requirement req : offer.getRequirements()) {
-                    req.setId(SkillMyBatisDao.getInstance().getSkill(req.getName()).getId());
+                    req.setId(SharedMyBatisDao.getInstance().getSkill(req.getName()).getId());
                     offerMapper.createRequirement(req, offer);
                 }
                 session.commit();

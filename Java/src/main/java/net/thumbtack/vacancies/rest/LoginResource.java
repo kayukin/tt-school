@@ -29,7 +29,7 @@ public class LoginResource {
 
     private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
     private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
-    private static volatile UserDao userDao = UserMyBatisDao.getInstance();
+    private static volatile SharedDao sharedDao = SharedMyBatisDao.getInstance();
     private static volatile TokenService tokenService = JWTService.getInstance();
 
     @GET
@@ -57,7 +57,7 @@ public class LoginResource {
         User credentials = gson.fromJson(body, User.class);
         String passwordHash = DigestUtils.sha1Hex(credentials.getPassword());
         LOGGER.debug("Hash: {}", passwordHash);
-        Optional<User> userOptional = userDao.getByLogin(credentials.getLogin());
+        Optional<User> userOptional = sharedDao.getByLogin(credentials.getLogin());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (!passwordHash.equals(user.getPassword())) {

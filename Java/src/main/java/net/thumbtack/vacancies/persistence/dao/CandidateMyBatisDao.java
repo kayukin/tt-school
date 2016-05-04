@@ -67,7 +67,7 @@ public class CandidateMyBatisDao implements CandidateDao {
     public void addSkillToCandidate(Candidate candidate, Skill skill) {
         try (SqlSession session = MyBatis.getInstance().openSession()) {
             SkillMapper skillMapper = session.getMapper(SkillMapper.class);
-            skill.setId(SkillMyBatisDao.getInstance().getSkill(skill.getName()).getId());
+            skill.setId(SharedMyBatisDao.getInstance().getSkill(skill.getName()).getId());
             skillMapper.addSkillToCandidate(candidate, skill);
             session.commit();
         }

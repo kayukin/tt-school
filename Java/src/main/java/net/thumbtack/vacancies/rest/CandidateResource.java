@@ -29,6 +29,7 @@ public class CandidateResource {
     private static final Gson gson = new Gson();
     private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
     private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
+    private static volatile SharedDao sharedDao = SharedMyBatisDao.getInstance();
 
     private static MessageSource messageSource = MessageSource.getInstance();
     private static volatile TokenService tokenService = JWTService.getInstance();
@@ -131,7 +132,7 @@ public class CandidateResource {
         Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
-            List<Offer> allOffers = null;
+            List<Offer> allOffers = sharedDao.getOffers();
             List<Offer> offers = compareService.filterOffers(allOffers, candidate.getSkills());
             return Response.ok(gson.toJson(offers)).build();
         } else {
