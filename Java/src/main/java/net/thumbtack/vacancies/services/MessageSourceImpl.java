@@ -1,6 +1,5 @@
 package net.thumbtack.vacancies.services;
 
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ public class MessageSourceImpl implements MessageSource {
 
     private MessageSourceImpl() {
 
-        try (InputStream inputStream = MessageSourceImpl.class.getClassLoader().getResourceAsStream(filename);) {
+        try (InputStream inputStream = MessageSourceImpl.class.getClassLoader().getResourceAsStream(filename)) {
             properties.load(inputStream);
         } catch (IOException e) {
             LOGGER.error("Can't load property file: ", e);
@@ -36,9 +35,8 @@ public class MessageSourceImpl implements MessageSource {
         return properties.getProperty(propertyName);
     }
 
-    public String getJsonErrorMessage(String propertyName) {
-        JsonObject json = new JsonObject();
-        json.addProperty("error", getMessage(propertyName));
-        return json.toString();
+    @Override
+    public String toJson(String key, String value) {
+        return "{\"" + key + "\":\"" + getMessage(value) + "\"}";
     }
 }

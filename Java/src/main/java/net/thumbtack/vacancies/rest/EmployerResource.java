@@ -53,11 +53,11 @@ public class EmployerResource {
         } catch (DuplicateLogin e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", employer.getLogin());
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(messageSource.getJsonErrorMessage("duplicateuser")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.DUPLICATEUSER)).build();
         } catch (DuplicateCompany e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", employer.getCompany());
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(messageSource.getJsonErrorMessage("duplicatecompany")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.DUPLICATECOMPANY)).build();
         }
     }
 
@@ -76,7 +76,7 @@ public class EmployerResource {
             return Response.ok(gson.toJson(employer)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -97,7 +97,7 @@ public class EmployerResource {
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -117,7 +117,7 @@ public class EmployerResource {
             return Response.ok(gson.toJson(employerOffers)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -149,7 +149,7 @@ public class EmployerResource {
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -173,7 +173,7 @@ public class EmployerResource {
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 }

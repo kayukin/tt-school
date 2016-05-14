@@ -65,26 +65,22 @@ public class LoginResource {
             User user = userOptional.get();
             if (!passwordHash.equals(user.getPassword())) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(messageSource.getJsonErrorMessage("incorrectpassword")).build();
+                        .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.INCORRECTPASSWORD)).build();
             }
             Optional<Employer> employerOptional = employerDao.getById(user.getId());
             Optional<Candidate> candidateOptional = candidateDao.getById(user.getId());
             if (employerOptional.isPresent()) {
                 Employer employer = employerOptional.get();
-                String sessionId = tokenService.createToken(employer);
-                JsonObject json = new JsonObject();
-                json.addProperty("token", sessionId);
-                return Response.ok(json.toString()).build();
+                String token = tokenService.createToken(employer);
+                return Response.ok(messageSource.toJson(MessageSource.TOKEN, token)).build();
             } else if (candidateOptional.isPresent()) {
                 Candidate candidate = candidateOptional.get();
-                String sessionId = tokenService.createToken(candidate);
-                JsonObject json = new JsonObject();
-                json.addProperty("token", sessionId);
-                return Response.ok(json.toString()).build();
+                String token = tokenService.createToken(candidate);
+                return Response.ok(messageSource.toJson(MessageSource.TOKEN, token)).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
     }
 
     @DELETE

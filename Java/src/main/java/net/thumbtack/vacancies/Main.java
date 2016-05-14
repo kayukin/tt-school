@@ -2,13 +2,9 @@ package net.thumbtack.vacancies;
 
 import net.thumbtack.vacancies.services.ConfigService;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.glassfish.jersey.jetty.JettyHttpContainer;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
-import org.glassfish.jersey.server.ContainerFactory;
 
 import javax.ws.rs.core.UriBuilder;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 

@@ -5,10 +5,15 @@ import com.google.gson.JsonObject;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Skill;
-import net.thumbtack.vacancies.persistence.dao.*;
+import net.thumbtack.vacancies.persistence.dao.CandidateDao;
+import net.thumbtack.vacancies.persistence.dao.EmployerDao;
+import net.thumbtack.vacancies.persistence.dao.OtherDao;
 import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 import net.thumbtack.vacancies.rest.filter.Secured;
-import net.thumbtack.vacancies.services.*;
+import net.thumbtack.vacancies.services.CompareService;
+import net.thumbtack.vacancies.services.MessageSource;
+import net.thumbtack.vacancies.services.ServiceLocator;
+import net.thumbtack.vacancies.services.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +53,7 @@ public class CandidateResource {
         } catch (DuplicateLogin e) {
             LOGGER.info("Attempt to create a duplicate user: {}.", candidate.getLogin());
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(messageSource.getJsonErrorMessage("duplicateuser")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.DUPLICATEUSER)).build();
         }
     }
 
@@ -67,7 +72,7 @@ public class CandidateResource {
             return Response.ok(gson.toJson(candidate)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -92,7 +97,7 @@ public class CandidateResource {
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -118,7 +123,7 @@ public class CandidateResource {
             return Response.ok(gson.toJson(candidateSkills)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -139,7 +144,7 @@ public class CandidateResource {
             return Response.ok(gson.toJson(offers)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 
@@ -155,12 +160,11 @@ public class CandidateResource {
         Optional<Candidate> candidateOptional = candidateDao.getById(id);
         if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
-            //TODO remove skill
             otherDao.deleteSkill(id_skill, candidate);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(messageSource.getJsonErrorMessage("usernotfound")).build();
+                    .entity(messageSource.toJson(MessageSource.ERROR, MessageSource.USERNOTFOUND)).build();
         }
     }
 }
