@@ -22,4 +22,15 @@
         INSERT INTO skills (id_skill, level, id_candidate)
         VALUES (#{skill.id}, #{skill.level}, #{candidate.id})
     </insert>
+
+    <delete id="deleteSkill" parameterType="map">
+        DELETE FROM skills
+        WHERE id_candidate =#{candidate_id} AND id_skill=#{id}
+    </delete>
+
+    <update id="changeLevel" parameterType="map">
+        UPDATE skills
+        SET level = #{level}
+        WHERE id_candidate =#{candidate_id} AND id_skill=#{id}
+    </update>
 </mapper>

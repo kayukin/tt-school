@@ -1,4 +1,4 @@
-package net.thumbtack.vacancies.rest.token;
+package net.thumbtack.vacancies.services;
 
 import net.thumbtack.vacancies.domain.User;
 

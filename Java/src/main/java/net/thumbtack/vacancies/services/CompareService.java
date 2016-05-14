@@ -1,4 +1,4 @@
-package net.thumbtack.vacancies;
+package net.thumbtack.vacancies.services;
 
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Offer;

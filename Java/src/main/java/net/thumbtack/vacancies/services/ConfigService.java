@@ -1,4 +1,4 @@
-package net.thumbtack.vacancies.config;
+package net.thumbtack.vacancies.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,5 +64,9 @@ public class ConfigService {
 
     public long getTokenTTL() {
         return Long.parseLong(properties.getProperty("token_ttl"));
+    }
+
+    public boolean isInMemory() {
+        return properties.getProperty("in_memory_dao").equals("true");
     }
 }

@@ -2,6 +2,7 @@ package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +18,6 @@ public interface CandidateDao {
     List<Candidate> getAll();
 
     void addSkillToCandidate(Candidate candidate, Skill skill);
+
+    void changeLevel(Candidate candidate, Skill skill);
 }

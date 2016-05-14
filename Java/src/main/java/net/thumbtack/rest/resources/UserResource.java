@@ -13,7 +13,7 @@ public class UserResource {
     //thread-safe thing
     private static final Gson gson = new Gson();
 
-    private static volatile UserDao dao = new JdbcUserDao();//InMemoryUserDao.getInstance();
+    private static volatile UserDao dao = new JdbcUserDao();//InMemoryUserDao.getSessionFactory();
 
 
     @POST

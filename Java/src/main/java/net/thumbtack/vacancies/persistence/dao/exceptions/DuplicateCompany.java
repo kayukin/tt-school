@@ -1,4 +1,4 @@
-package net.thumbtack.vacancies.persistence.dao;
+package net.thumbtack.vacancies.persistence.dao.exceptions;
 
 /**
  * Created by Konstantin on 17.02.2016.

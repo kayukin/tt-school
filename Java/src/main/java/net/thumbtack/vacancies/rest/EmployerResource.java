@@ -2,16 +2,18 @@ package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.thumbtack.vacancies.CompareService;
-import net.thumbtack.vacancies.CompareServiceImpl;
-import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
-import net.thumbtack.vacancies.persistence.dao.*;
+import net.thumbtack.vacancies.persistence.dao.CandidateDao;
+import net.thumbtack.vacancies.persistence.dao.EmployerDao;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateCompany;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 import net.thumbtack.vacancies.rest.filter.Secured;
-import net.thumbtack.vacancies.rest.token.JWTService;
-import net.thumbtack.vacancies.rest.token.TokenService;
+import net.thumbtack.vacancies.services.CompareService;
+import net.thumbtack.vacancies.services.MessageSource;
+import net.thumbtack.vacancies.services.ServiceLocator;
+import net.thumbtack.vacancies.services.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +30,13 @@ import java.util.Optional;
 public class EmployerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployerResource.class);
     private static final Gson gson = new Gson();
-    private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
-    private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
-    private static MessageSource messageSource = MessageSource.getInstance();
-    private static volatile TokenService tokenService = JWTService.getInstance();
-    private static volatile CompareService compareService = CompareServiceImpl.getInstance();
+    private static volatile ServiceLocator locator = ServiceLocator.getInstance();
+
+    private static volatile EmployerDao employerDao = locator.getEmployerDao();
+    private static volatile CandidateDao candidateDao = locator.getCandidateDao();
+    private static MessageSource messageSource = locator.getMessageSource();
+    private static volatile TokenService tokenService = locator.getTokenService();
+    private static volatile CompareService compareService = locator.getCompareService();
 
     @POST
     @Produces("application/json")

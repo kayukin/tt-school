@@ -1,11 +1,10 @@
-package net.thumbtack.vacancies;
+package net.thumbtack.vacancies.services;
 
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Requirement;
 import net.thumbtack.vacancies.domain.Skill;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

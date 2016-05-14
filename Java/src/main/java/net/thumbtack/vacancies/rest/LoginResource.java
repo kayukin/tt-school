@@ -2,14 +2,16 @@ package net.thumbtack.vacancies.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.thumbtack.vacancies.config.MessageSource;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.User;
-import net.thumbtack.vacancies.persistence.dao.*;
+import net.thumbtack.vacancies.persistence.dao.CandidateDao;
+import net.thumbtack.vacancies.persistence.dao.EmployerDao;
+import net.thumbtack.vacancies.persistence.dao.OtherDao;
 import net.thumbtack.vacancies.rest.filter.Secured;
-import net.thumbtack.vacancies.rest.token.JWTService;
-import net.thumbtack.vacancies.rest.token.TokenService;
+import net.thumbtack.vacancies.services.MessageSource;
+import net.thumbtack.vacancies.services.ServiceLocator;
+import net.thumbtack.vacancies.services.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +27,13 @@ import java.util.Optional;
 public class LoginResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginResource.class);
     private static final Gson gson = new Gson();
-    private static MessageSource messageSource = MessageSource.getInstance();
+    private static volatile ServiceLocator locator = ServiceLocator.getInstance();
 
-    private static volatile CandidateDao candidateDao = CandidateMyBatisDao.getInstance();
-    private static volatile EmployerDao employerDao = EmployerMyBatisDao.getInstance();
-    private static volatile SharedDao sharedDao = SharedMyBatisDao.getInstance();
-    private static volatile TokenService tokenService = JWTService.getInstance();
+    private static MessageSource messageSource = locator.getMessageSource();
+    private static volatile CandidateDao candidateDao = locator.getCandidateDao();
+    private static volatile EmployerDao employerDao = locator.getEmployerDao();
+    private static volatile OtherDao otherDao = locator.getOtherDao();
+    private static volatile TokenService tokenService = locator.getTokenService();
 
     @GET
     @Secured
@@ -57,7 +60,7 @@ public class LoginResource {
         User credentials = gson.fromJson(body, User.class);
         String passwordHash = DigestUtils.sha1Hex(credentials.getPassword());
         LOGGER.debug("Hash: {}", passwordHash);
-        Optional<User> userOptional = sharedDao.getByLogin(credentials.getLogin());
+        Optional<User> userOptional = otherDao.getByLogin(credentials.getLogin());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (!passwordHash.equals(user.getPassword())) {

@@ -2,6 +2,7 @@ package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by Konstantin on 14.04.2016.
- */
 public class CandidateInMemoryDao implements CandidateDao {
     private static final CandidateDao INSTANCE = new CandidateInMemoryDao();
 
@@ -44,5 +42,11 @@ public class CandidateInMemoryDao implements CandidateDao {
     @Override
     public void addSkillToCandidate(Candidate candidate, Skill skill) {
         database.get(candidate.getId()).getSkills().add(skill);
+    }
+
+    @Override
+    public void changeLevel(Candidate candidate, Skill skill) {
+        List<Skill> skills = database.get(candidate.getId()).getSkills();
+        skills.get(skills.indexOf(skill)).setLevel(skill.getLevel());
     }
 }

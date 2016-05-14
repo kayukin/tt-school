@@ -2,6 +2,7 @@ package net.thumbtack.vacancies.persistence.dao;
 
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Skill;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.CandidateMapper;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.SkillMapper;
@@ -31,7 +32,7 @@ public class CandidateMyBatisDao implements CandidateDao {
 
     @Override
     public int create(Candidate candidate) throws DuplicateLogin {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             try {
                 session.getMapper(UserMapper.class).createUser(candidate);
                 session.getMapper(CandidateMapper.class).create(candidate);
@@ -49,7 +50,7 @@ public class CandidateMyBatisDao implements CandidateDao {
 
     @Override
     public Optional<Candidate> getById(int id) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             CandidateMapper mapper = session.getMapper(CandidateMapper.class);
             return Optional.ofNullable(mapper.getById(id));
         }
@@ -57,7 +58,7 @@ public class CandidateMyBatisDao implements CandidateDao {
 
     @Override
     public List<Candidate> getAll() {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             CandidateMapper mapper = session.getMapper(CandidateMapper.class);
             return mapper.getAll();
         }
@@ -65,10 +66,19 @@ public class CandidateMyBatisDao implements CandidateDao {
 
     @Override
     public void addSkillToCandidate(Candidate candidate, Skill skill) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             SkillMapper skillMapper = session.getMapper(SkillMapper.class);
-            skill.setId(SharedMyBatisDao.getInstance().getSkill(skill.getName()).getId());
+            skill.setId(OtherMyBatisDao.getInstance().getSkill(skill.getName()).getId());
             skillMapper.addSkillToCandidate(candidate, skill);
+            session.commit();
+        }
+    }
+
+    @Override
+    public void changeLevel(Candidate candidate, Skill skill) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
+            SkillMapper skillMapper = session.getMapper(SkillMapper.class);
+            skillMapper.changeLevel(skill.getId(), candidate.getId(), skill.getLevel());
             session.commit();
         }
     }

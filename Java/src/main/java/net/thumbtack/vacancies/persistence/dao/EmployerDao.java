@@ -3,6 +3,8 @@ package net.thumbtack.vacancies.persistence.dao;
 import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateCompany;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 
 import java.util.List;
 import java.util.Optional;

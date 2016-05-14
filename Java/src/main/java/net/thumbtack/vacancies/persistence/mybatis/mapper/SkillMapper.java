@@ -17,4 +17,8 @@ public interface SkillMapper {
     void addSkillToCandidate(@Param("candidate") Candidate candidate, @Param("skill") Skill skill);
 
     List<Skill> getCandidateSkills(Candidate candidate);
+
+    void deleteSkill(@Param("id") int id, @Param("candidate_id") int candidate_id);
+
+    void changeLevel(@Param("id") int id, @Param("candidate_id") int candidate_id, @Param("level") int level);
 }

@@ -4,6 +4,8 @@ import net.thumbtack.vacancies.domain.Candidate;
 import net.thumbtack.vacancies.domain.Employer;
 import net.thumbtack.vacancies.domain.Offer;
 import net.thumbtack.vacancies.domain.Requirement;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateCompany;
+import net.thumbtack.vacancies.persistence.dao.exceptions.DuplicateLogin;
 import net.thumbtack.vacancies.persistence.mybatis.MyBatis;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.EmployerMapper;
 import net.thumbtack.vacancies.persistence.mybatis.mapper.OfferMapper;
@@ -34,7 +36,7 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public int create(Employer employer) throws DuplicateCompany, DuplicateLogin {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             try {
                 session.getMapper(UserMapper.class).createUser(employer);
                 session.getMapper(EmployerMapper.class).create(employer);
@@ -54,7 +56,7 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public Optional<Employer> getById(int id) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             EmployerMapper mapper = session.getMapper(EmployerMapper.class);
             return Optional.ofNullable(mapper.getById(id));
         }
@@ -62,7 +64,7 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public List<Employer> getAll() {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             EmployerMapper mapper = session.getMapper(EmployerMapper.class);
             return mapper.getAll();
         }
@@ -70,13 +72,13 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public void addOfferToEmployer(Employer employer, Offer offer) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             try {
                 OfferMapper offerMapper = session.getMapper(OfferMapper.class);
                 SkillMapper skillMapper = session.getMapper(SkillMapper.class);
                 offerMapper.createOffer(employer, offer);
                 for (Requirement req : offer.getRequirements()) {
-                    req.setId(SharedMyBatisDao.getInstance().getSkill(req.getName()).getId());
+                    req.setId(OtherMyBatisDao.getInstance().getSkill(req.getName()).getId());
                     offerMapper.createRequirement(req, offer);
                 }
                 session.commit();
@@ -89,7 +91,7 @@ public class EmployerMyBatisDao implements EmployerDao {
 
     @Override
     public List<Candidate> getCandidates(Offer offer) {
-        try (SqlSession session = MyBatis.getInstance().openSession()) {
+        try (SqlSession session = MyBatis.SessionFactory().openSession()) {
             try {
                 EmployerMapper employerMapper = session.getMapper(EmployerMapper.class);
                 return employerMapper.getCandidates(offer);

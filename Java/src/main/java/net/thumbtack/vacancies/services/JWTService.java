@@ -1,13 +1,11 @@
-package net.thumbtack.vacancies.rest.token;
+package net.thumbtack.vacancies.services;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.compression.CompressionCodecs;
-import io.jsonwebtoken.impl.crypto.MacProvider;
-import net.thumbtack.vacancies.config.ConfigService;
 import net.thumbtack.vacancies.domain.User;
 
-import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
 
 public class JWTService implements TokenService {

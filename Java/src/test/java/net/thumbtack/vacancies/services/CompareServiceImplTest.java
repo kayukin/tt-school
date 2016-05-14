@@ -1,4 +1,4 @@
-package net.thumbtack.vacancies;
+package net.thumbtack.vacancies.services;
 
 import net.thumbtack.vacancies.domain.Requirement;
 import net.thumbtack.vacancies.domain.Skill;

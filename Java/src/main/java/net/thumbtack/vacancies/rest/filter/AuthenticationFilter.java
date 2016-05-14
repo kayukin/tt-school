@@ -1,7 +1,7 @@
 package net.thumbtack.vacancies.rest.filter;
 
-import net.thumbtack.vacancies.rest.token.JWTService;
-import net.thumbtack.vacancies.rest.token.TokenService;
+import net.thumbtack.vacancies.services.JWTService;
+import net.thumbtack.vacancies.services.TokenService;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;

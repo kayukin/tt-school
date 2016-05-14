@@ -7,9 +7,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by Konstantin on 17.02.2016.
- */
 public class MyBatis {
     private static volatile SqlSessionFactory INSTANCE;
     private static final String resource = "mybatis.xml";
@@ -17,7 +14,7 @@ public class MyBatis {
     private MyBatis() {
     }
 
-    public static SqlSessionFactory getInstance() {
+    public static SqlSessionFactory SessionFactory() {
         if (INSTANCE == null)
             init();
         return INSTANCE;
